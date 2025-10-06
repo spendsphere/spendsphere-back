@@ -11,5 +11,3 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Dependency Review
-        uses: actions/dependency-review-action@v4
