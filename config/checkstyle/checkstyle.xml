@@ -27,12 +27,7 @@
         <module name="ImportOrder">
             <property name="ordered" value="true"/>
             <property name="separated" value="true"/>
-            <property name="groups" value="java,javax,org,com"/>
-        </module>
-
-        <module name="Indentation">
-            <property name="basicOffset" value="4"/>
-            <property name="tabWidth" value="4"/>
+            <property name="groups" value="java,javax,io,org,com"/>
         </module>
 
         <module name="MethodLength">
