@@ -22,7 +22,7 @@ repositories {
 
 checkstyle {
 	toolVersion = '10.18.0'
-	configFile = file('config/checkstyle/checkstyle.xml')
+	configFile = file("${rootProject.projectDir}/config/checkstyle/checkstyle.xml")
 	ignoreFailures = false
 }
 
