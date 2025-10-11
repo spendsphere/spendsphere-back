@@ -34,5 +34,4 @@ public class UserController {
   public UserProfileDTO createProfile(@RequestBody UserProfileCreateDTO dto) {
     return userService.createProfile(dto);
   }
-
 }

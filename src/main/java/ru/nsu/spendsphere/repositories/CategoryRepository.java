@@ -7,35 +7,22 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.nsu.spendsphere.models.entities.Category;
-import ru.nsu.spendsphere.models.entities.User;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
+  // Вернуть все категории юзера (кастомные + дефолтные)
+  @Query("SELECT c FROM Category c WHERE c.user.id = :userId OR c.isDefault = true")
+  List<Category> findAllByUserIdOrDefault(@Param("userId") Long userId);
 
-  // Категории конкретного пользователя (только кастомные)
-  @Query("SELECT c FROM Category c WHERE c.user.id = :userId")
-  List<Category> findByUserId(@Param("userId") Long userId);
+  // Только кастомные категории
+  List<Category> findByUser_IdAndIsDefaultFalse(Long userId);
 
-  // Дефолтные категории (без пользователя)
-  List<Category> findByUserIsNull();
+  // Только дефолтные
+  List<Category> findByIsDefaultTrue();
 
-  // Все категории для пользователя (дефолтные + его кастомные)
-  @Query("SELECT c FROM Category c WHERE c.user IS NULL OR c.user.id = :userId")
-  List<Category> findAllCategoriesForUser(@Param("userId") Long userId);
+  // Одна кастомная категория юзера
+  Optional<Category> findByIdAndUser_IdAndIsDefaultFalse(Long categoryId, Long userId);
 
-  // Поиск по ID и пользователю (только для кастомных категорий)
-  Optional<Category> findByIdAndUserId(Long id, Long userId);
-
-  // Проверка существования категории по имени для пользователя
-  @Query(
-      "SELECT CASE WHEN COUNT(c) > 0 THEN true ELSE false END FROM Category c WHERE "
-          + "(c.user IS NULL AND :userId IS NULL) OR "
-          + "(c.user.id = :userId AND c.name = :name)")
-  boolean existsByUserIdAndName(@Param("userId") Long userId, @Param("name") String name);
-
-  // Для дефолтных категорий
-  boolean existsByUserIsNullAndName(String name);
-
-  // Для кастомных категорий
-  boolean existsByUserAndName(User user, String name);
+  // Проверка принадлежности
+  boolean existsByIdAndUser_IdAndIsDefaultFalse(Long categoryId, Long userId);
 }
