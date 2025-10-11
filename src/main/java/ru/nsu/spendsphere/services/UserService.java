@@ -14,6 +14,10 @@ import ru.nsu.spendsphere.models.entities.User;
 import ru.nsu.spendsphere.models.mappers.UserMapper;
 import ru.nsu.spendsphere.repositories.UserRepository;
 
+/**
+ * Сервис для управления пользователями. Предоставляет бизнес-логику для работы с профилями
+ * пользователей, включая получение, создание и обновление данных.
+ */
 @RequiredArgsConstructor
 @Service
 public class UserService {
@@ -22,6 +26,13 @@ public class UserService {
   private final UserMapper userMapper;
   private final PasswordEncoder encoder;
 
+  /**
+   * Получение профиля пользователя по идентификатору.
+   *
+   * @param id идентификатор пользователя
+   * @return DTO с данными профиля пользователя
+   * @throws ResourceNotFoundException если пользователь с указанным ID не найден
+   */
   public UserProfileDTO getProfile(Long id) {
     Optional<User> user = userRepository.findById(id);
     if (user.isEmpty()) {
@@ -31,6 +42,14 @@ public class UserService {
     }
   }
 
+  /**
+   * Обновление данных профиля пользователя.
+   *
+   * @param id идентификатор пользователя
+   * @param userInputDTO DTO с обновленными данными профиля
+   * @return DTO с обновленными данными профиля пользователя
+   * @throws ResourceNotFoundException если пользователь с указанным ID не найден
+   */
   @Transactional
   public UserProfileDTO updateUserById(Long id, UserProfileUpdateDTO userInputDTO) {
     Optional<User> userOptional = userRepository.findById(id);
@@ -45,6 +64,13 @@ public class UserService {
     return userMapper.toUserProfileDTO(userRepository.save(user));
   }
 
+  /**
+   * Создание нового профиля пользователя.
+   *
+   * @param userInputDTO DTO с данными для создания профиля
+   * @return DTO созданного профиля пользователя
+   * @throws BadRequestException если пользователь с указанным email уже существует
+   */
   @Transactional
   public UserProfileDTO createProfile(UserProfileCreateDTO userInputDTO) {
     if (userRepository.existsByEmail(userInputDTO.email())) {
