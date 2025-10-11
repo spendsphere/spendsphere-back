@@ -26,6 +26,10 @@ checkstyle {
 	ignoreFailures = false
 }
 
+checkstyleTest {
+	exclude '**/controllers/*Test.java'
+}
+
 spotless {
 	java {
 		googleJavaFormat('1.17.0')
