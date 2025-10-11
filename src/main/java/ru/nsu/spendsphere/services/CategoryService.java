@@ -32,7 +32,7 @@ public class CategoryService {
     if (!userRepository.existsById(userId)) {
       throw new ResourceNotFoundException("User with id " + userId + " not found");
     }
-    return categoryRepository.findByUser_IdAndIsDefaultFalse(userId).stream()
+    return categoryRepository.findByUserIdAndIsDefaultFalse(userId).stream()
         .map(CategoryMapper::toDto)
         .collect(Collectors.toList());
   }
@@ -65,7 +65,7 @@ public class CategoryService {
     }
     Category category =
         categoryRepository
-            .findByIdAndUser_IdAndIsDefaultFalse(categoryId, userId)
+            .findByIdAndUserIdAndIsDefaultFalse(categoryId, userId)
             .orElseThrow(
                 () ->
                     new ResourceNotFoundException("Category with id " + categoryId + " not found"));
@@ -78,7 +78,7 @@ public class CategoryService {
     if (!userRepository.existsById(userId)) {
       throw new ResourceNotFoundException("User with id " + userId + " not found");
     }
-    if (!categoryRepository.existsByIdAndUser_IdAndIsDefaultFalse(categoryId, userId)) {
+    if (!categoryRepository.existsByIdAndUserIdAndIsDefaultFalse(categoryId, userId)) {
       throw new ResourceNotFoundException("Category with id " + categoryId + " not found");
     }
     categoryRepository.deleteById(categoryId);

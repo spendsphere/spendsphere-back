@@ -15,14 +15,14 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
   List<Category> findAllByUserIdOrDefault(@Param("userId") Long userId);
 
   // Только кастомные категории
-  List<Category> findByUser_IdAndIsDefaultFalse(Long userId);
+  List<Category> findByUserIdAndIsDefaultFalse(Long userId);
 
   // Только дефолтные
   List<Category> findByIsDefaultTrue();
 
   // Одна кастомная категория юзера
-  Optional<Category> findByIdAndUser_IdAndIsDefaultFalse(Long categoryId, Long userId);
+  Optional<Category> findByIdAndUserIdAndIsDefaultFalse(Long categoryId, Long userId);
 
   // Проверка принадлежности
-  boolean existsByIdAndUser_IdAndIsDefaultFalse(Long categoryId, Long userId);
+  boolean existsByIdAndUserIdAndIsDefaultFalse(Long categoryId, Long userId);
 }
