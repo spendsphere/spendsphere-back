@@ -57,10 +57,18 @@ public class UserService {
       throw new ResourceNotFoundException("User with id " + id + " not found");
     }
     User user = userOptional.get();
-    user.setSurname(userInputDTO.surname());
-    user.setName(userInputDTO.name());
-    user.setBirthday(userInputDTO.birthday());
-    user.setPhotoUrl(userInputDTO.photoUrl());
+    if (userInputDTO.surname() != null) {
+      user.setSurname(userInputDTO.surname());
+    }
+    if (userInputDTO.name() != null) {
+      user.setName(userInputDTO.name());
+    }
+    if (userInputDTO.birthday() != null) {
+      user.setBirthday(userInputDTO.birthday());
+    }
+    if (userInputDTO.photoUrl() != null) {
+      user.setPhotoUrl(userInputDTO.photoUrl());
+    }
     return userMapper.toUserProfileDTO(userRepository.save(user));
   }
 
