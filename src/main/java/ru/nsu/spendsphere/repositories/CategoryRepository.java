@@ -8,10 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.nsu.spendsphere.models.entities.Category;
 
-/**
- * Репозиторий для работы с категориями расходов и доходов. Предоставляет методы для выполнения
- * операций с базой данных категорий.
- */
+/** Репозиторий для работы с категориями расходов и доходов. */
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
   /**

@@ -109,8 +109,12 @@ public class CategoryService {
             .orElseThrow(
                 () ->
                     new ResourceNotFoundException("Category with id " + categoryId + " not found"));
-    category.setName(body.name());
-    category.setIconUrl(body.iconUrl());
+    if (body.name() != null) {
+      category.setName(body.name());
+    }
+    if (body.iconUrl() != null) {
+      category.setIconUrl(body.iconUrl());
+    }
     return CategoryMapper.toDto(categoryRepository.save(category));
   }
 

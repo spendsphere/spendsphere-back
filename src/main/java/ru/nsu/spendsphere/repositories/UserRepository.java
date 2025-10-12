@@ -5,10 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import ru.nsu.spendsphere.models.entities.User;
 
-/**
- * Репозиторий для работы с сущностью пользователя. Предоставляет методы для выполнения операций с
- * базой данных пользователей.
- */
+/** Репозиторий для работы с сущностью пользователя. */
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
   /**
