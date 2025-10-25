@@ -61,9 +61,9 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
    * @param userId идентификатор пользователя
    * @return Optional с категорией, если она доступна для пользователя
    */
-    @Query(
-            "SELECT c FROM Category c WHERE c.id = :categoryId AND (c.isDefault = true OR c.user.id ="
-                    + " :userId)")
-    Optional<Category> findByIdAndIsDefaultTrueOrUserId(
-            @Param("categoryId") Long categoryId, @Param("userId") Long userId);
+  @Query(
+      "SELECT c FROM Category c WHERE c.id = :categoryId AND (c.isDefault = true OR c.user.id ="
+          + " :userId)")
+  Optional<Category> findByIdAndIsDefaultTrueOrUserId(
+      @Param("categoryId") Long categoryId, @Param("userId") Long userId);
 }

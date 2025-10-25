@@ -49,15 +49,15 @@ public class TransactionService {
       throw new ResourceNotFoundException("User with id " + userId + " not found");
     }
     return transactionRepository.findByUserIdOrderByDateDescCreatedAtDesc(userId).stream()
-            .map(transactionMapper::toTransactionDTO)
-            .collect(Collectors.toList());
+        .map(transactionMapper::toTransactionDTO)
+        .collect(Collectors.toList());
   }
 
   /**
    * Получение транзакции по идентификатору.
    *
    * @param transactionId идентификатор транзакции
-   * @param userId        идентификатор пользователя-владельца
+   * @param userId идентификатор пользователя-владельца
    * @return DTO транзакции
    * @throws ResourceNotFoundException если транзакция не найдена или не принадлежит пользователю
    */
@@ -66,68 +66,71 @@ public class TransactionService {
       throw new ResourceNotFoundException("User with id " + userId + " not found");
     }
     Transaction transaction =
-            transactionRepository
-                    .findByIdAndUserId(transactionId, userId)
-                    .orElseThrow(
-                            () ->
-                                    new ResourceNotFoundException(
-                                            "Transaction with id " + transactionId + " not found for user " + userId));
+        transactionRepository
+            .findByIdAndUserId(transactionId, userId)
+            .orElseThrow(
+                () ->
+                    new ResourceNotFoundException(
+                        "Transaction with id " + transactionId + " not found for user " + userId));
     return transactionMapper.toTransactionDTO(transaction);
   }
 
   /**
    * Получение транзакций пользователя с фильтрами.
    *
-   * @param userId     идентификатор пользователя
-   * @param type       тип транзакции (опционально)
-   * @param accountId  идентификатор счета (опционально)
+   * @param userId идентификатор пользователя
+   * @param type тип транзакции (опционально)
+   * @param accountId идентификатор счета (опционально)
    * @param categoryId идентификатор категории (опционально)
-   * @param dateFrom   дата начала периода (опционально)
-   * @param dateTo     дата окончания периода (опционально)
+   * @param dateFrom дата начала периода (опционально)
+   * @param dateTo дата окончания периода (опционально)
    * @return список DTO транзакций
    * @throws ResourceNotFoundException если пользователь не найден
    */
   public List<TransactionDTO> getTransactionsWithFilters(
-          Long userId,
-          TransactionType type,
-          Long accountId,
-          Long categoryId,
-          LocalDate dateFrom,
-          LocalDate dateTo) {
+      Long userId,
+      TransactionType type,
+      Long accountId,
+      Long categoryId,
+      LocalDate dateFrom,
+      LocalDate dateTo) {
     if (!userRepository.existsById(userId)) {
       throw new ResourceNotFoundException("User with id " + userId + " not found");
     }
     return transactionRepository
-            .findByUserIdWithFilters(userId, type, accountId, categoryId, dateFrom, dateTo)
-            .stream()
-            .map(transactionMapper::toTransactionDTO)
-            .collect(Collectors.toList());
+        .findByUserIdWithFilters(userId, type, accountId, categoryId, dateFrom, dateTo)
+        .stream()
+        .map(transactionMapper::toTransactionDTO)
+        .collect(Collectors.toList());
   }
 
   /**
    * Создание новой транзакции.
    *
-   * @param userId    идентификатор пользователя
+   * @param userId идентификатор пользователя
    * @param createDTO DTO с данными для создания транзакции
    * @return DTO созданной транзакции
    * @throws ResourceNotFoundException если пользователь, счет или категория не найдены
-   * @throws BadRequestException       если данные некорректны
+   * @throws BadRequestException если данные некорректны
    */
   @Transactional
   public TransactionDTO createTransaction(Long userId, TransactionCreateDTO createDTO) {
     User user =
-            userRepository
-                    .findById(userId)
-                    .orElseThrow(
-                            () -> new ResourceNotFoundException("User with id " + userId + " not found"));
+        userRepository
+            .findById(userId)
+            .orElseThrow(
+                () -> new ResourceNotFoundException("User with id " + userId + " not found"));
 
     Account account =
-            accountRepository
-                    .findByIdAndUserId(createDTO.accountId(), userId)
-                    .orElseThrow(
-                            () ->
-                                    new ResourceNotFoundException("Account with id " + createDTO.accountId() + " not found for user "
-                                            + userId));
+        accountRepository
+            .findByIdAndUserId(createDTO.accountId(), userId)
+            .orElseThrow(
+                () ->
+                    new ResourceNotFoundException(
+                        "Account with id "
+                            + createDTO.accountId()
+                            + " not found for user "
+                            + userId));
 
     Account transferAccount = null;
     if (createDTO.type() == TransactionType.TRANSFER) {
@@ -138,38 +141,41 @@ public class TransactionService {
         throw new BadRequestException("Transfer account must be different from source account");
       }
       transferAccount =
-              accountRepository
-                      .findByIdAndUserId(createDTO.transferAccountId(), userId)
-                      .orElseThrow(
-                              () ->
-                                      new ResourceNotFoundException("Transfer account with id " + createDTO.transferAccountId()
-                                              + " not found for user " + userId));
+          accountRepository
+              .findByIdAndUserId(createDTO.transferAccountId(), userId)
+              .orElseThrow(
+                  () ->
+                      new ResourceNotFoundException(
+                          "Transfer account with id "
+                              + createDTO.transferAccountId()
+                              + " not found for user "
+                              + userId));
     }
 
     Category category = null;
     if (createDTO.categoryId() != null) {
       category =
-              categoryRepository
-                      .findByIdAndIsDefaultTrueOrUserId(createDTO.categoryId(), userId)
-                      .orElseThrow(
-                              () ->
-                                      new ResourceNotFoundException(
-                                              "Category with id " + createDTO.categoryId() + " not found"));
+          categoryRepository
+              .findByIdAndIsDefaultTrueOrUserId(createDTO.categoryId(), userId)
+              .orElseThrow(
+                  () ->
+                      new ResourceNotFoundException(
+                          "Category with id " + createDTO.categoryId() + " not found"));
     }
 
     validateSufficientFunds(account, createDTO.type(), createDTO.amount());
 
     Transaction transaction =
-            Transaction.builder()
-                    .user(user)
-                    .type(createDTO.type())
-                    .category(category)
-                    .account(account)
-                    .transferAccount(transferAccount)
-                    .amount(createDTO.amount())
-                    .description(createDTO.description())
-                    .date(createDTO.date())
-                    .build();
+        Transaction.builder()
+            .user(user)
+            .type(createDTO.type())
+            .category(category)
+            .account(account)
+            .transferAccount(transferAccount)
+            .amount(createDTO.amount())
+            .description(createDTO.description())
+            .date(createDTO.date())
+            .build();
 
     Transaction savedTransaction = transactionRepository.save(transaction);
 
@@ -186,26 +192,26 @@ public class TransactionService {
    * Обновление существующей транзакции.
    *
    * @param transactionId идентификатор транзакции
-   * @param userId        идентификатор пользователя-владельца
-   * @param updateDTO     DTO с данными для обновления
+   * @param userId идентификатор пользователя-владельца
+   * @param updateDTO DTO с данными для обновления
    * @return DTO обновленной транзакции
    * @throws ResourceNotFoundException если транзакция, счет или категория не найдены
-   * @throws BadRequestException       если данные некорректны
+   * @throws BadRequestException если данные некорректны
    */
   @Transactional
   public TransactionDTO updateTransaction(
-          Long transactionId, Long userId, TransactionUpdateDTO updateDTO) {
+      Long transactionId, Long userId, TransactionUpdateDTO updateDTO) {
     if (!userRepository.existsById(userId)) {
       throw new ResourceNotFoundException("User with id " + userId + " not found");
     }
 
     Transaction transaction =
-            transactionRepository
-                    .findByIdAndUserId(transactionId, userId)
-                    .orElseThrow(
-                            () ->
-                                    new ResourceNotFoundException(
-                                            "Transaction with id " + transactionId + " not found for user " + userId));
+        transactionRepository
+            .findByIdAndUserId(transactionId, userId)
+            .orElseThrow(
+                () ->
+                    new ResourceNotFoundException(
+                        "Transaction with id " + transactionId + " not found for user " + userId));
 
     TransactionType oldType = transaction.getType();
     BigDecimal oldAmount = transaction.getAmount();
@@ -217,15 +223,13 @@ public class TransactionService {
     updateTransactionFields(transaction, userId, updateDTO);
 
     validateSufficientFunds(
-            transaction.getAccount(),
-            transaction.getType(),
-            transaction.getAmount());
+        transaction.getAccount(), transaction.getType(), transaction.getAmount());
 
     applyTransactionToBalance(
-            transaction.getAccount(),
-            transaction.getTransferAccount(),
-            transaction.getType(),
-            transaction.getAmount());
+        transaction.getAccount(),
+        transaction.getTransferAccount(),
+        transaction.getType(),
+        transaction.getAmount());
 
     saveUpdatedAccounts(oldAccount, oldTransferAccount, transaction);
 
@@ -236,55 +240,55 @@ public class TransactionService {
    * Обновляет поля транзакции согласно DTO.
    *
    * @param transaction транзакция для обновления
-   * @param userId      идентификатор пользователя
-   * @param updateDTO   DTO с данными для обновления
+   * @param userId идентификатор пользователя
+   * @param updateDTO DTO с данными для обновления
    */
   private void updateTransactionFields(
-          Transaction transaction, Long userId, TransactionUpdateDTO updateDTO) {
+      Transaction transaction, Long userId, TransactionUpdateDTO updateDTO) {
     if (updateDTO.type() != null) {
       transaction.setType(updateDTO.type());
     }
 
     if (updateDTO.accountId() != null) {
       Account account =
-              accountRepository
-                      .findByIdAndUserId(updateDTO.accountId(), userId)
-                      .orElseThrow(
-                              () ->
-                                      new ResourceNotFoundException(
-                                              "Account with id "
-                                                      + updateDTO.accountId()
-                                                      + " not found for user "
-                                                      + userId));
+          accountRepository
+              .findByIdAndUserId(updateDTO.accountId(), userId)
+              .orElseThrow(
+                  () ->
+                      new ResourceNotFoundException(
+                          "Account with id "
+                              + updateDTO.accountId()
+                              + " not found for user "
+                              + userId));
       transaction.setAccount(account);
     }
 
     if (updateDTO.transferAccountId() != null) {
       if (transaction.getType() != TransactionType.TRANSFER
-              && updateDTO.type() != TransactionType.TRANSFER) {
+          && updateDTO.type() != TransactionType.TRANSFER) {
         throw new BadRequestException("Transfer account can only be set for TRANSFER transactions");
       }
       Account transferAccount =
-              accountRepository
-                      .findByIdAndUserId(updateDTO.transferAccountId(), userId)
-                      .orElseThrow(
-                              () ->
-                                      new ResourceNotFoundException(
-                                              "Transfer account with id "
-                                                      + updateDTO.transferAccountId()
-                                                      + " not found for user "
-                                                      + userId));
+          accountRepository
+              .findByIdAndUserId(updateDTO.transferAccountId(), userId)
+              .orElseThrow(
+                  () ->
+                      new ResourceNotFoundException(
+                          "Transfer account with id "
+                              + updateDTO.transferAccountId()
+                              + " not found for user "
+                              + userId));
       transaction.setTransferAccount(transferAccount);
     }
 
     if (updateDTO.categoryId() != null) {
       Category category =
-              categoryRepository
-                      .findByIdAndIsDefaultTrueOrUserId(updateDTO.categoryId(), userId)
-                      .orElseThrow(
-                              () ->
-                                      new ResourceNotFoundException(
-                                              "Category with id " + updateDTO.categoryId() + " not found"));
+          categoryRepository
+              .findByIdAndIsDefaultTrueOrUserId(updateDTO.categoryId(), userId)
+              .orElseThrow(
+                  () ->
+                      new ResourceNotFoundException(
+                          "Category with id " + updateDTO.categoryId() + " not found"));
       transaction.setCategory(category);
     }
 
@@ -304,12 +308,12 @@ public class TransactionService {
   /**
    * Сохраняет обновленные счета после изменения транзакции.
    *
-   * @param oldAccount         старый основной счет
+   * @param oldAccount старый основной счет
    * @param oldTransferAccount старый счет для перевода
-   * @param transaction        обновленная транзакция
+   * @param transaction обновленная транзакция
    */
   private void saveUpdatedAccounts(
-          Account oldAccount, Account oldTransferAccount, Transaction transaction) {
+      Account oldAccount, Account oldTransferAccount, Transaction transaction) {
     accountRepository.save(oldAccount);
     if (oldTransferAccount != null) {
       accountRepository.save(oldTransferAccount);
@@ -318,7 +322,7 @@ public class TransactionService {
       accountRepository.save(transaction.getAccount());
     }
     if (transaction.getTransferAccount() != null
-            && !transaction.getTransferAccount().equals(oldTransferAccount)) {
+        && !transaction.getTransferAccount().equals(oldTransferAccount)) {
       accountRepository.save(transaction.getTransferAccount());
     }
   }
@@ -327,7 +331,7 @@ public class TransactionService {
    * Удаление транзакции.
    *
    * @param transactionId идентификатор транзакции
-   * @param userId        идентификатор пользователя-владельца
+   * @param userId идентификатор пользователя-владельца
    * @throws ResourceNotFoundException если транзакция не найдена или не принадлежит пользователю
    */
   @Transactional
@@ -336,18 +340,18 @@ public class TransactionService {
       throw new ResourceNotFoundException("User with id " + userId + " not found");
     }
     Transaction transaction =
-            transactionRepository
-                    .findByIdAndUserId(transactionId, userId)
-                    .orElseThrow(
-                            () ->
-                                    new ResourceNotFoundException(
-                                            "Transaction with id " + transactionId + " not found for user " + userId));
+        transactionRepository
+            .findByIdAndUserId(transactionId, userId)
+            .orElseThrow(
+                () ->
+                    new ResourceNotFoundException(
+                        "Transaction with id " + transactionId + " not found for user " + userId));
 
     revertTransactionFromBalance(
-            transaction.getAccount(),
-            transaction.getTransferAccount(),
-            transaction.getType(),
-            transaction.getAmount());
+        transaction.getAccount(),
+        transaction.getTransferAccount(),
+        transaction.getType(),
+        transaction.getAmount());
 
     accountRepository.save(transaction.getAccount());
     if (transaction.getTransferAccount() != null) {
@@ -360,13 +364,13 @@ public class TransactionService {
   /**
    * Применяет изменения транзакции к балансу счетов.
    *
-   * @param account         основной счет
+   * @param account основной счет
    * @param transferAccount счет для перевода (может быть null)
-   * @param type            тип транзакции
-   * @param amount          сумма транзакции
+   * @param type тип транзакции
+   * @param amount сумма транзакции
    */
   private void applyTransactionToBalance(
-          Account account, Account transferAccount, TransactionType type, BigDecimal amount) {
+      Account account, Account transferAccount, TransactionType type, BigDecimal amount) {
     switch (type) {
       case INCOME:
         account.setBalance(account.getBalance().add(amount));
@@ -386,13 +390,13 @@ public class TransactionService {
   /**
    * Откатывает изменения транзакции из баланса счетов.
    *
-   * @param account         основной счет
+   * @param account основной счет
    * @param transferAccount счет для перевода (может быть null)
-   * @param type            тип транзакции
-   * @param amount          сумма транзакции
+   * @param type тип транзакции
+   * @param amount сумма транзакции
    */
   private void revertTransactionFromBalance(
-          Account account, Account transferAccount, TransactionType type, BigDecimal amount) {
+      Account account, Account transferAccount, TransactionType type, BigDecimal amount) {
     switch (type) {
       case INCOME:
         account.setBalance(account.getBalance().subtract(amount));
@@ -413,20 +417,19 @@ public class TransactionService {
    * Проверяет достаточность средств на счете для выполнения транзакции.
    *
    * @param account основной счет
-   * @param type    тип транзакции
-   * @param amount  сумма транзакции
+   * @param type тип транзакции
+   * @param amount сумма транзакции
    * @throws BadRequestException если недостаточно средств
    */
-  private void validateSufficientFunds(
-          Account account, TransactionType type, BigDecimal amount) {
+  private void validateSufficientFunds(Account account, TransactionType type, BigDecimal amount) {
     if ((type == TransactionType.EXPENSE || type == TransactionType.TRANSFER)
-            && (account.getBalance().compareTo(amount) < 0))
+        && (account.getBalance().compareTo(amount) < 0))
       throw new BadRequestException(
-              "Insufficient funds on account "
-                      + account.getName()
-                      + ". Available: "
-                      + account.getBalance()
-                      + ", required: "
-                      + amount);
+          "Insufficient funds on account "
+              + account.getName()
+              + ". Available: "
+              + account.getBalance()
+              + ", required: "
+              + amount);
   }
 }
