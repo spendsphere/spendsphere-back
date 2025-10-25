@@ -73,4 +73,9 @@ public class User {
   @Builder.Default
   @ToString.Exclude
   private List<Transaction> transactions = new ArrayList<>();
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @Builder.Default
+  @ToString.Exclude
+  private List<Reminder> reminders = new ArrayList<>();
 }
