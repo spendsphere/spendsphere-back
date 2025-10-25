@@ -44,7 +44,15 @@ class ReminderControllerTest {
     Long userId = 1L;
     ReminderCreateDTO createDTO =
         new ReminderCreateDTO(
-            "Оплата", null, new BigDecimal("100.00"), RecurrenceType.DAILY, null, null, null, true, 2L);
+            "Оплата",
+            null,
+            new BigDecimal("100.00"),
+            RecurrenceType.DAILY,
+            null,
+            null,
+            null,
+            true,
+            2L);
 
     ReminderDTO response =
         new ReminderDTO(
@@ -109,7 +117,9 @@ class ReminderControllerTest {
     Long userId = 1L;
     Long reminderId = 999L;
     when(reminderService.getById(userId, reminderId))
-        .thenThrow(new ResourceNotFoundException("Reminder with id " + reminderId + " not found for user " + userId));
+        .thenThrow(
+            new ResourceNotFoundException(
+                "Reminder with id " + reminderId + " not found for user " + userId));
 
     mockMvc
         .perform(get("/api/v1/users/{userId}/reminders/{reminderId}", userId, reminderId))
@@ -121,7 +131,16 @@ class ReminderControllerTest {
     Long userId = 1L;
     Long reminderId = 10L;
     ReminderUpdateDTO updateDTO =
-        new ReminderUpdateDTO("Оплата (upd)", null, new BigDecimal("120.00"), RecurrenceType.DAILY, null, null, null, true, 2L);
+        new ReminderUpdateDTO(
+            "Оплата (upd)",
+            null,
+            new BigDecimal("120.00"),
+            RecurrenceType.DAILY,
+            null,
+            null,
+            null,
+            true,
+            2L);
 
     ReminderDTO response =
         new ReminderDTO(
@@ -164,5 +183,3 @@ class ReminderControllerTest {
         .andExpect(status().isNoContent());
   }
 }
-
-

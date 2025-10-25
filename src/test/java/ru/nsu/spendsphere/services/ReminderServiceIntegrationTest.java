@@ -82,8 +82,7 @@ class ReminderServiceIntegrationTest {
 
     reminderService.delete(user.getId(), created.id());
     assertThrows(
-        ResourceNotFoundException.class,
-        () -> reminderService.getById(user.getId(), created.id()));
+        ResourceNotFoundException.class, () -> reminderService.getById(user.getId(), created.id()));
   }
 
   @Test
@@ -164,10 +163,7 @@ class ReminderServiceIntegrationTest {
   }
 
   private Account createAccount(User user, String name) {
-    Account account =
-        Account.builder().user(user).accountType(AccountType.CARD).name(name).build();
+    Account account = Account.builder().user(user).accountType(AccountType.CARD).name(name).build();
     return accountRepository.save(account);
   }
 }
-
-
