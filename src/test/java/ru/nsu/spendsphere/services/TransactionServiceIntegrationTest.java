@@ -32,7 +32,7 @@ class TransactionServiceIntegrationTest {
   // ---------- CREATE ----------
 
   @Test
-  void createIncome_updatesBalance() {
+  void createIncomeUpdatesBalance() {
     User user = createUser();
     Account account = createAccount(user, "Основная карта", new BigDecimal("1000.00"));
 
@@ -52,7 +52,7 @@ class TransactionServiceIntegrationTest {
   }
 
   @Test
-  void createExpense_updatesBalance() {
+  void createExpenseUpdatesBalance() {
     User user = createUser();
     Account account = createAccount(user, "Основная карта", new BigDecimal("1000.00"));
 
@@ -72,7 +72,7 @@ class TransactionServiceIntegrationTest {
   }
 
   @Test
-  void createTransfer_updatesBothBalances() {
+  void createTransferUpdatesBothBalances() {
     User user = createUser();
     Account source = createAccount(user, "Дебетовая", new BigDecimal("1000.00"));
     Account target = createAccount(user, "Сбережения", new BigDecimal("300.00"));
@@ -95,7 +95,7 @@ class TransactionServiceIntegrationTest {
   }
 
   @Test
-  void createExpense_insufficientFunds_throwsAndNoChange() {
+  void createExpenseInsufficientFundsThrowsAndNoChange() {
     User user = createUser();
     Account account = createAccount(user, "Основная карта", new BigDecimal("100.00"));
 
@@ -120,7 +120,7 @@ class TransactionServiceIntegrationTest {
   // ---------- UPDATE ----------
 
   @Test
-  void updateExpense_changeAmount_appliesDeltaCorrectly() {
+  void updateExpenseChangeAmountAppliesDeltaCorrectly() {
     User user = createUser();
     Account account = createAccount(user, "Основная карта", new BigDecimal("1000.00"));
 
@@ -154,7 +154,7 @@ class TransactionServiceIntegrationTest {
   }
 
   @Test
-  void updateExpense_changeAccount_movesEffectBetweenAccounts() {
+  void updateExpenseChangeAccountMovesEffectBetweenAccounts() {
     User user = createUser();
     Account a = createAccount(user, "A", new BigDecimal("1000.00"));
     Account b = createAccount(user, "B", new BigDecimal("500.00"));
@@ -186,7 +186,7 @@ class TransactionServiceIntegrationTest {
   }
 
   @Test
-  void updateToTransfer_appliesTransferEffect() {
+  void updateToTransferAppliesTransferEffect() {
     User user = createUser();
     Account a = createAccount(user, "A", new BigDecimal("1000.00"));
     Account b = createAccount(user, "B", new BigDecimal("500.00"));
@@ -226,7 +226,7 @@ class TransactionServiceIntegrationTest {
   // ---------- DELETE ----------
 
   @Test
-  void deleteExpense_revertsBalance() {
+  void deleteExpenseRevertsBalance() {
     User user = createUser();
     Account account = createAccount(user, "Основная карта", new BigDecimal("1000.00"));
 
@@ -249,7 +249,7 @@ class TransactionServiceIntegrationTest {
   }
 
   @Test
-  void deleteTransfer_revertsBoth() {
+  void deleteTransferRevertsBoth() {
     User user = createUser();
     Account a = createAccount(user, "A", new BigDecimal("1000.00"));
     Account b = createAccount(user, "B", new BigDecimal("300.00"));
