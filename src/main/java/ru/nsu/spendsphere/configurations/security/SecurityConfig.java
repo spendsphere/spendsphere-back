@@ -16,29 +16,32 @@ import ru.nsu.spendsphere.services.CustomOAuth2UserService;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final CustomOAuth2UserService customOAuth2UserService;
+  private final CustomOAuth2UserService customOAuth2UserService;
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/v1/**"))
-                .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/api/v1/**")
-                        .permitAll()
-                        .anyRequest()
-                        .authenticated()
-                )
-                .oauth2Login(oauth2 -> oauth2
-                        .userInfoEndpoint(userInfo ->
-                                userInfo.userService((OAuth2UserService<OAuth2UserRequest, OAuth2User>) customOAuth2UserService)
-                        )
-                );
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http.csrf(csrf -> csrf.ignoringRequestMatchers("/api/v1/**"))
+        .authorizeHttpRequests(
+            authz ->
+                authz
+                    .requestMatchers(
+                        "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/api/v1/**")
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated())
+        .oauth2Login(
+            oauth2 ->
+                oauth2.userInfoEndpoint(
+                    userInfo ->
+                        userInfo.userService(
+                            (OAuth2UserService<OAuth2UserRequest, OAuth2User>)
+                                customOAuth2UserService)));
 
-        return http.build();
-    }
+    return http.build();
+  }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 }
