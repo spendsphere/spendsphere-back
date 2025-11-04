@@ -14,6 +14,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,10 +25,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import ru.nsu.spendsphere.exceptions.BadRequestException;
 import ru.nsu.spendsphere.models.dto.TransactionCreateDTO;
 import ru.nsu.spendsphere.models.dto.TransactionDTO;
 import ru.nsu.spendsphere.models.dto.TransactionUpdateDTO;
 import ru.nsu.spendsphere.models.entities.TransactionType;
+import ru.nsu.spendsphere.services.TransactionImageService;
 import ru.nsu.spendsphere.services.TransactionService;
 
 @Tag(
@@ -39,6 +43,7 @@ import ru.nsu.spendsphere.services.TransactionService;
 public class TransactionController {
 
   private final TransactionService transactionService;
+  private final TransactionImageService transactionImageService;
 
   @Operation(
       summary = "Получение всех транзакций пользователя",
@@ -164,6 +169,33 @@ public class TransactionController {
           @Valid
           TransactionCreateDTO createDTO) {
     return transactionService.createTransaction(userId, createDTO);
+  }
+
+  @Operation(
+      summary = "Загрузка фото для распознавания транзакций",
+      description = "Принимает фото и accountId, отправляет его в RabbitMQ и возвращает 200 OK")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Фото поставлено в очередь на распознавание"),
+        @ApiResponse(responseCode = "400", description = "Ошибка чтения файла", content = @Content)
+      })
+  @PostMapping(value = "/photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @ResponseStatus(HttpStatus.OK)
+  public void uploadTransactionPhoto(
+      @Parameter(description = "Идентификатор пользователя", required = true) @PathVariable
+          Long userId,
+      @Parameter(description = "Идентификатор счета", required = true) @RequestParam("accountId")
+          Long accountId,
+      @Parameter(description = "Файл изображения", required = true) @RequestParam("file")
+          MultipartFile file) {
+    try {
+      transactionImageService.sendImageForRecognition(
+          userId, accountId, file.getOriginalFilename(), file.getContentType(), file.getBytes());
+    } catch (Exception e) {
+      throw new BadRequestException("Не удалось прочитать файл изображения: " + e.getMessage());
+    }
   }
 
   @Operation(
