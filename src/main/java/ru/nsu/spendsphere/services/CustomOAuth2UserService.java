@@ -30,15 +30,14 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
   @Override
   @Transactional
-  public OAuth2User loadUser(OAuth2UserRequest userRequest)
-          throws OAuth2AuthenticationException {
+  public OAuth2User loadUser(OAuth2UserRequest userReq) throws OAuth2AuthenticationException {
     log.info("=== Starting OAuth2 login process ===");
 
     OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
-    OAuth2User oAuth2User = delegate.loadUser(userRequest);
+    OAuth2User oAuth2User = delegate.loadUser(userReq);
 
     Map<String, Object> attributes = new HashMap<>(oAuth2User.getAttributes());
-    String registrationId = userRequest.getClientRegistration().getRegistrationId();
+    String registrationId = userReq.getClientRegistration().getRegistrationId();
 
     String email = (String) attributes.get("email");
     String name = (String) attributes.getOrDefault("name", null);
