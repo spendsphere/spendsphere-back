@@ -2,6 +2,7 @@ package ru.nsu.spendsphere.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
@@ -11,29 +12,29 @@ import ru.nsu.spendsphere.models.entities.User;
 import ru.nsu.spendsphere.repositories.UserRepository;
 import ru.nsu.spendsphere.services.JwtTokenProvider;
 
-import java.io.IOException;
-
 @Component
 @RequiredArgsConstructor
 public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private final JwtTokenProvider jwtTokenProvider;
-    private final UserRepository userRepository;
+  private final JwtTokenProvider jwtTokenProvider;
+  private final UserRepository userRepository;
 
-    @Override
-    public void onAuthenticationSuccess(HttpServletRequest request,
-                                        HttpServletResponse response,
-                                        Authentication authentication) throws IOException {
+  @Override
+  public void onAuthenticationSuccess(
+      HttpServletRequest request, HttpServletResponse response, Authentication authentication)
+      throws IOException {
 
-        DefaultOAuth2User oauthUser = (DefaultOAuth2User) authentication.getPrincipal();
-        String email = oauthUser.getAttribute("email");
+    DefaultOAuth2User oauthUser = (DefaultOAuth2User) authentication.getPrincipal();
+    String email = oauthUser.getAttribute("email");
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found after OAuth login"));
+    User user =
+        userRepository
+            .findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("User not found after OAuth login"));
 
-        String token = jwtTokenProvider.generateToken(user.getEmail());
+    String token = jwtTokenProvider.generateToken(user.getEmail());
 
-        response.setContentType("application/json");
-        response.getWriter().write("{\"accessToken\": \"" + token + "\"}");
-    }
+    response.setContentType("application/json");
+    response.getWriter().write("{\"accessToken\": \"" + token + "\"}");
+  }
 }

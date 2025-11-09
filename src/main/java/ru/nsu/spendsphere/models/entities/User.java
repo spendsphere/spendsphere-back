@@ -46,8 +46,7 @@ public class User {
   @Column(nullable = true)
   private String surname;
 
-  @Column
-  private LocalDate birthday;
+  @Column private LocalDate birthday;
 
   @Column(name = "photo_url")
   private String photoUrl;
