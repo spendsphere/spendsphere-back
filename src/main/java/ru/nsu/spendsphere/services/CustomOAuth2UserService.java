@@ -30,7 +30,8 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
   @Override
   @Transactional
-  public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+  public OAuth2User loadUser(OAuth2UserRequest userRequest)
+          throws OAuth2AuthenticationException {
     log.info("=== Starting OAuth2 login process ===");
 
     OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
