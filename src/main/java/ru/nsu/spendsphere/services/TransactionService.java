@@ -163,8 +163,6 @@ public class TransactionService {
                           "Category with id " + createDTO.categoryId() + " not found"));
     }
 
-    validateSufficientFunds(account, createDTO.type(), createDTO.amount());
-
     Transaction transaction =
         Transaction.builder()
             .user(user)
@@ -221,9 +219,6 @@ public class TransactionService {
     revertTransactionFromBalance(oldAccount, oldTransferAccount, oldType, oldAmount);
 
     updateTransactionFields(transaction, userId, updateDTO);
-
-    validateSufficientFunds(
-        transaction.getAccount(), transaction.getType(), transaction.getAmount());
 
     applyTransactionToBalance(
         transaction.getAccount(),
@@ -411,25 +406,5 @@ public class TransactionService {
         }
         break;
     }
-  }
-
-  /**
-   * Проверяет достаточность средств на счете для выполнения транзакции.
-   *
-   * @param account основной счет
-   * @param type тип транзакции
-   * @param amount сумма транзакции
-   * @throws BadRequestException если недостаточно средств
-   */
-  private void validateSufficientFunds(Account account, TransactionType type, BigDecimal amount) {
-    if ((type == TransactionType.EXPENSE || type == TransactionType.TRANSFER)
-        && (account.getBalance().compareTo(amount) < 0))
-      throw new BadRequestException(
-          "Insufficient funds on account "
-              + account.getName()
-              + ". Available: "
-              + account.getBalance()
-              + ", required: "
-              + amount);
   }
 }
