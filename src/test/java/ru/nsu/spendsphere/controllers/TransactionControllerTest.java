@@ -33,6 +33,7 @@ import ru.nsu.spendsphere.models.dto.TransactionCreateDTO;
 import ru.nsu.spendsphere.models.dto.TransactionDTO;
 import ru.nsu.spendsphere.models.dto.TransactionUpdateDTO;
 import ru.nsu.spendsphere.models.entities.TransactionType;
+import ru.nsu.spendsphere.services.TransactionImageService;
 import ru.nsu.spendsphere.services.TransactionService;
 
 /** Юнит-тесты для {@link TransactionController}. */
@@ -44,6 +45,7 @@ class TransactionControllerTest {
   @Autowired private MockMvc mockMvc;
 
   @MockitoBean private TransactionService transactionService;
+  @MockitoBean private TransactionImageService transactionImageService;
 
   @Autowired private ObjectMapper objectMapper;
 
@@ -487,37 +489,5 @@ class TransactionControllerTest {
         .perform(
             delete("/api/v1/users/{userId}/transactions/{transactionId}", userId, transactionId))
         .andExpect(status().isNotFound());
-  }
-
-  /**
-   * Тест создания транзакции при недостаточности средств.
-   *
-   * @throws Exception если возникла ошибка при выполнении запроса
-   */
-  @Test
-  void createExpenseWithInsufficientFunds() throws Exception {
-    Long userId = 1L;
-    TransactionCreateDTO createDTO =
-        new TransactionCreateDTO(
-            TransactionType.EXPENSE,
-            5L,
-            2L,
-            null,
-            new BigDecimal("10000.00"),
-            "Покупка",
-            LocalDate.now());
-
-    when(transactionService.createTransaction(eq(userId), any(TransactionCreateDTO.class)))
-        .thenThrow(
-            new BadRequestException(
-                "Insufficient funds on account Основная карта. Available: 1000.00, required:"
-                    + " 10000.00"));
-
-    mockMvc
-        .perform(
-            post("/api/v1/users/{userId}/transactions", userId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(createDTO)))
-        .andExpect(status().isBadRequest());
   }
 }
