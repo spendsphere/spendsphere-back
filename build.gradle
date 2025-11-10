@@ -60,10 +60,18 @@ dependencies {
 	testImplementation 'com.h2database:h2'
 }
 
+
 tasks.named('test') {
 	useJUnitPlatform()
+	include '**/*Test.class'
 }
-
+sourceSets {
+	test {
+		java {
+			srcDirs = ['src/test/java']
+		}
+	}
+}
 configurations.all {
 	resolutionStrategy {
 		eachDependency { DependencyResolveDetails details ->

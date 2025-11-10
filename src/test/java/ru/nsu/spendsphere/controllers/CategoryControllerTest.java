@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
@@ -30,7 +31,7 @@ import ru.nsu.spendsphere.services.CategoryService;
 
 /** Юнит-тесты для {@link CategoryController}. */
 @WebMvcTest(CategoryController.class)
-@Import(SecurityConfig.class)
+@AutoConfigureMockMvc(addFilters = false)
 class CategoryControllerTest {
 
   @Autowired private MockMvc mockMvc;

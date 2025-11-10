@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
@@ -29,7 +30,7 @@ import ru.nsu.spendsphere.services.UserService;
 
 /** Юнит-тесты для {@link UserController}. */
 @WebMvcTest(UserController.class)
-@Import(SecurityConfig.class)
+@AutoConfigureMockMvc(addFilters = false)
 class UserControllerTest {
 
   @Autowired private MockMvc mockMvc;
