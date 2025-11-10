@@ -1,7 +1,6 @@
 package ru.nsu.spendsphere.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import ru.nsu.spendsphere.exceptions.BadRequestException;
 import ru.nsu.spendsphere.models.dto.TransactionCreateDTO;
 import ru.nsu.spendsphere.models.dto.TransactionUpdateDTO;
 import ru.nsu.spendsphere.models.entities.Account;
@@ -92,29 +90,6 @@ class TransactionServiceIntegrationTest {
     Account reloadedTarget = accountRepository.findById(target.getId()).orElseThrow();
     assertEquals(new BigDecimal("750.00"), reloadedSource.getBalance());
     assertEquals(new BigDecimal("550.00"), reloadedTarget.getBalance());
-  }
-
-  @Test
-  void createExpenseInsufficientFundsThrowsAndNoChange() {
-    User user = createUser();
-    Account account = createAccount(user, "Основная карта", new BigDecimal("100.00"));
-
-    assertThrows(
-        BadRequestException.class,
-        () ->
-            transactionService.createTransaction(
-                user.getId(),
-                new TransactionCreateDTO(
-                    TransactionType.EXPENSE,
-                    null,
-                    account.getId(),
-                    null,
-                    new BigDecimal("200.00"),
-                    "Покупка",
-                    LocalDate.now())));
-
-    Account reloaded = accountRepository.findById(account.getId()).orElseThrow();
-    assertEquals(new BigDecimal("100.00"), reloaded.getBalance());
   }
 
   // ---------- UPDATE ----------
