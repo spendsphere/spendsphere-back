@@ -21,19 +21,19 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http
-        .authorizeHttpRequests(
+    http.authorizeHttpRequests(
             authz ->
                 authz
                     .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
                     .permitAll()
-                    .requestMatchers("/api/v1/auth/**", "/oauth2/**")
+                    .requestMatchers("/api/v1/auth/**", "/oauth2/**", "/login/**")
                     .permitAll()
                     .anyRequest()
                     .authenticated())
         .oauth2Login(
             oauth2 ->
                 oauth2
+                    .loginPage("/oauth2/authorization/google")
                     .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
                     .successHandler(successHandler))
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
