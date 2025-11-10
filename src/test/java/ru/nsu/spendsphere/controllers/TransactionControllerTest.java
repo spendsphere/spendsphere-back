@@ -22,11 +22,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.nsu.spendsphere.configurations.security.SecurityConfig;
 import ru.nsu.spendsphere.exceptions.BadRequestException;
 import ru.nsu.spendsphere.exceptions.ResourceNotFoundException;
 import ru.nsu.spendsphere.models.dto.TransactionCreateDTO;
@@ -38,7 +36,6 @@ import ru.nsu.spendsphere.services.TransactionService;
 /** Юнит-тесты для {@link TransactionController}. */
 @WebMvcTest(TransactionController.class)
 @AutoConfigureMockMvc(addFilters = false)
-
 class TransactionControllerTest {
 
   @Autowired private MockMvc mockMvc;
