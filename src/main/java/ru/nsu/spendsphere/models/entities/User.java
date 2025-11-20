@@ -22,12 +22,12 @@ import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
-@Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "users")
 public class User {
 
   @Id
@@ -37,19 +37,25 @@ public class User {
   @Column(nullable = false, unique = true)
   private String email;
 
-  @Column(nullable = false)
+  @Column(nullable = true)
   private String password;
 
   @Column(nullable = false)
   private String name;
 
-  @Column(nullable = false)
+  @Column(nullable = true)
   private String surname;
 
   @Column private LocalDate birthday;
 
   @Column(name = "photo_url")
   private String photoUrl;
+
+  @Column(name = "provider")
+  private String provider;
+
+  @Column(name = "provider_id")
+  private String providerId;
 
   @CreationTimestamp
   @Column(name = "created_at", nullable = false, updatable = false)

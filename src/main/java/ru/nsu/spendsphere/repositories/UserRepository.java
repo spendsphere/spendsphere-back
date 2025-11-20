@@ -23,4 +23,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
    * @return true, если пользователь с таким email существует
    */
   boolean existsByEmail(String email);
+
+  Optional<User> findByProviderAndProviderId(String provider, String providerId);
 }

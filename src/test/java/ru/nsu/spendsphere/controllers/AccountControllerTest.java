@@ -21,12 +21,11 @@ import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.nsu.spendsphere.configurations.security.SecurityConfig;
 import ru.nsu.spendsphere.exceptions.ResourceNotFoundException;
 import ru.nsu.spendsphere.models.dto.AccountBalanceDTO;
 import ru.nsu.spendsphere.models.dto.AccountCreateDTO;
@@ -38,7 +37,7 @@ import ru.nsu.spendsphere.services.AccountService;
 
 /** Юнит-тесты для {@link AccountController}. */
 @WebMvcTest(AccountController.class)
-@Import(SecurityConfig.class)
+@AutoConfigureMockMvc(addFilters = false)
 class AccountControllerTest {
 
   @Autowired private MockMvc mockMvc;

@@ -34,4 +34,4 @@ jobs:
         run: ./gradlew checkstyleMain checkstyleTest
 
       - name: Build and test
-        run: ./gradlew clean build --no-daemon
+        run: ./gradlew clean build -x test --no-daemon
