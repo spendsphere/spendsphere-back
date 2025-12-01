@@ -1,0 +1,20 @@
+spring:
+  config:
+    activate:
+      on-profile: docker
+
+  application:
+    name: spendsphere
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    ru.nsu.spendsphere: DEBUG
+
+server:
+  port: 8080
