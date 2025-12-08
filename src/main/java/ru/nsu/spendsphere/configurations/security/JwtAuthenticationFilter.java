@@ -15,7 +15,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import ru.nsu.spendsphere.models.entities.User;
 import ru.nsu.spendsphere.repositories.UserRepository;
 import ru.nsu.spendsphere.services.JwtTokenProvider;
-
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -24,22 +23,37 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   private final UserRepository userRepository;
 
   @Override
-  protected void doFilterInternal(
-      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-      throws ServletException, IOException {
+  protected boolean shouldNotFilter(HttpServletRequest request) {
+    String path = request.getServletPath();
+
+    // Пропускаем все, что не начинается с /api/
+    // ИЛИ пропускаем конкретные публичные эндпоинты внутри /api/
+    if (!path.startsWith("/api/")) {
+      return true;
+    }
+
+    // Для /api/ проверяем, является ли это публичным эндпоинтом
+    return path.startsWith("/api/v1/auth/");
+  }
+
+  @Override
+  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+          throws ServletException, IOException {
 
     String header = request.getHeader("Authorization");
+
     if (header != null && header.startsWith("Bearer ")) {
       String token = header.substring(7);
+
       if (jwtTokenProvider.validateToken(token)) {
         String email = jwtTokenProvider.getEmailFromToken(token);
-        User user = userRepository.findByEmail(email).orElse(null);
-        if (user != null) {
+
+        userRepository.findByEmail(email).ifPresent(user -> {
           UsernamePasswordAuthenticationToken auth =
-              new UsernamePasswordAuthenticationToken(
-                  user, null, List.of(new SimpleGrantedAuthority("ROLE_USER")));
+                  new UsernamePasswordAuthenticationToken(
+                          user, null, List.of(new SimpleGrantedAuthority("ROLE_USER")));
           SecurityContextHolder.getContext().setAuthentication(auth);
-        }
+        });
       }
     }
 
