@@ -85,6 +85,7 @@ public class CategoryService {
             .name(body.name())
             .iconUrl(body.iconUrl())
             .isDefault(false)
+            .categoryType(body.categoryType() != null ? body.categoryType() : ru.nsu.spendsphere.models.entities.CategoryType.BOTH)
             .user(user)
             .build();
     return CategoryMapper.toDto(categoryRepository.save(category));
@@ -114,6 +115,9 @@ public class CategoryService {
     }
     if (body.iconUrl() != null) {
       category.setIconUrl(body.iconUrl());
+    }
+    if (body.categoryType() != null) {
+      category.setCategoryType(body.categoryType());
     }
     return CategoryMapper.toDto(categoryRepository.save(category));
   }

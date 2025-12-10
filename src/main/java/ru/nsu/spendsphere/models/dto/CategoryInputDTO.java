@@ -2,6 +2,7 @@ package ru.nsu.spendsphere.models.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import ru.nsu.spendsphere.models.entities.CategoryType;
 
 @Schema(description = "Данные для создания или обновления категории")
 public record CategoryInputDTO(
@@ -11,4 +12,6 @@ public record CategoryInputDTO(
     @Schema(
             description = "URL иконки категории",
             example = "https://example.com/transport-icon.png")
-        String iconUrl) {}
+        String iconUrl,
+    @Schema(description = "Тип категории", example = "EXPENSE")
+        CategoryType categoryType) {}

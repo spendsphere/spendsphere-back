@@ -1,6 +1,8 @@
 package ru.nsu.spendsphere.models.entities;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -45,6 +47,10 @@ public class Category {
 
   @Column(name = "name", nullable = false)
   private String name;
+
+  @Enumerated(EnumType.STRING)
+  @Column(name = "category_type")
+  private CategoryType categoryType = CategoryType.BOTH;
 
   @CreationTimestamp
   @Column(name = "created_at", nullable = false, updatable = false)

@@ -3,6 +3,8 @@ package ru.nsu.spendsphere.controllers;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
@@ -34,7 +36,9 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
     String token = jwtTokenProvider.generateToken(user.getEmail());
 
-    response.setContentType("application/json");
-    response.getWriter().write("{\"accessToken\": \"" + token + "\"}");
+    String redirectUrl =
+        "http://localhost:3000/oauth2/callback?token="
+            + URLEncoder.encode(token, StandardCharsets.UTF_8);
+    response.sendRedirect(redirectUrl);
   }
 }
