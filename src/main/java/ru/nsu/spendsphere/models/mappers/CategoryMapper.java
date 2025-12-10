@@ -8,6 +8,6 @@ public class CategoryMapper {
     if (c == null) {
       return null;
     }
-    return new CategoryDTO(c.getId(), c.getName(), c.getIconUrl(), c.getIsDefault());
+    return new CategoryDTO(c.getId(), c.getName(), c.getIconUrl(), c.getIsDefault(), c.getCategoryType());
   }
 }
