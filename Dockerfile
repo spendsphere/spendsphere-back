@@ -9,7 +9,7 @@ COPY config ./config
 
 RUN java -version
 
-RUN gradle clean build -x test -x spotlessJavaCheck -x spotlessJava --no-daemon
+RUN gradle clean build -x check -x test --no-daemon
 
 FROM eclipse-temurin:21-jre-alpine
 
