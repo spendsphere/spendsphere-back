@@ -1,11 +1,11 @@
 package ru.nsu.spendsphere.controllers;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -20,6 +20,9 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
   private final JwtTokenProvider jwtTokenProvider;
   private final UserRepository userRepository;
+
+  @Value("${app.frontend.url:http://localhost:3000}")
+  private String frontendUrl;
 
   @Override
   public void onAuthenticationSuccess(
@@ -36,9 +39,14 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
     String token = jwtTokenProvider.generateToken(user.getEmail());
 
-    String redirectUrl =
-        "http://localhost:3000/oauth2/callback?token="
-            + URLEncoder.encode(token, StandardCharsets.UTF_8);
+    Cookie cookie = new Cookie("accessToken", token);
+    cookie.setPath("/");
+    cookie.setMaxAge(7 * 24 * 60 * 60);
+    cookie.setHttpOnly(false);
+    cookie.setSecure(false);
+    response.addCookie(cookie);
+
+    String redirectUrl = frontendUrl + "/oauth2/callback";
     response.sendRedirect(redirectUrl);
   }
 }
