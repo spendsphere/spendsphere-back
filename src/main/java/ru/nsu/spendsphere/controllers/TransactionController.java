@@ -29,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.nsu.spendsphere.exceptions.BadRequestException;
 import ru.nsu.spendsphere.models.dto.TransactionCreateDTO;
 import ru.nsu.spendsphere.models.dto.TransactionDTO;
+import ru.nsu.spendsphere.models.dto.TransactionStatisticsDTO;
 import ru.nsu.spendsphere.models.dto.TransactionUpdateDTO;
 import ru.nsu.spendsphere.models.entities.TransactionType;
 import ru.nsu.spendsphere.services.TransactionImageService;
@@ -136,6 +137,39 @@ public class TransactionController {
           LocalDate dateTo) {
     return transactionService.getTransactionsWithFilters(
         userId, type, accountId, categoryId, dateFrom, dateTo);
+  }
+
+  @Operation(
+      summary = "Получение статистики транзакций за период",
+      description =
+          "Возвращает агрегированную статистику по транзакциям за указанный период (1, 3, 6 или 12"
+              + " месяцев)")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Статистика успешно получена",
+            content =
+                @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = TransactionStatisticsDTO.class))),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Пользователь не найден",
+            content = @Content),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Некорректный период (должен быть 1, 3, 6 или 12 месяцев)",
+            content = @Content)
+      })
+  @GetMapping("/statistics")
+  public TransactionStatisticsDTO getStatistics(
+      @Parameter(description = "Идентификатор пользователя", required = true) @PathVariable
+          Long userId,
+      @Parameter(description = "Количество месяцев (1, 3, 6 или 12)", required = true, example = "3")
+          @RequestParam
+          Integer months) {
+    return transactionService.getTransactionStatistics(userId, months);
   }
 
   @Operation(

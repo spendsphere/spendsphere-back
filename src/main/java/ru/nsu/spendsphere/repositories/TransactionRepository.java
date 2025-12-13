@@ -48,8 +48,8 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
           + "AND (:accountId IS NULL OR t.account.id = :accountId OR t.transferAccount.id ="
           + " :accountId) "
           + "AND (:categoryId IS NULL OR t.category.id = :categoryId) "
-          + "AND (:dateFrom IS NULL OR t.date >= :dateFrom) "
-          + "AND (:dateTo IS NULL OR t.date <= :dateTo) "
+          + "AND (CAST(:dateFrom AS date) IS NULL OR t.date >= :dateFrom) "
+          + "AND (CAST(:dateTo AS date) IS NULL OR t.date <= :dateTo) "
           + "ORDER BY t.date DESC, t.createdAt DESC")
   List<Transaction> findByUserIdWithFilters(
       @Param("userId") Long userId,
