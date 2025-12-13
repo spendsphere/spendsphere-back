@@ -8,9 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.nsu.spendsphere.models.entities.Advice;
 
-/**
- * Репозиторий для работы с финансовыми советами.
- */
+/** Репозиторий для работы с финансовыми советами. */
 @Repository
 public interface AdviceRepository extends JpaRepository<Advice, Long> {
 
@@ -41,4 +39,3 @@ public interface AdviceRepository extends JpaRepository<Advice, Long> {
           + "WHERE a.taskId = :taskId")
   Optional<Advice> findByTaskIdWithItems(@Param("taskId") String taskId);
 }
-

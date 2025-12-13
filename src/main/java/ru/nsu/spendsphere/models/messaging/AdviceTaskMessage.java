@@ -11,4 +11,3 @@ import java.util.Map;
  */
 public record AdviceTaskMessage(
     String taskId, AdviceGoal goal, Map<String, MonthlyStats> monthlyStats) {}
-

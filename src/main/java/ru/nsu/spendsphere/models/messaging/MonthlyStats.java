@@ -14,4 +14,3 @@ public record MonthlyStats(
     Map<String, BigDecimal> expensesByCategory,
     Map<String, BigDecimal> incomeBySource,
     Map<String, BigDecimal> averageByCategory) {}
-

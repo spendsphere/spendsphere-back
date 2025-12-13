@@ -32,8 +32,7 @@ public class TransactionImageService {
       Long userId, Long accountId, String filename, String contentType, byte[] data) {
     UUID taskId = UUID.randomUUID();
 
-    OcrTask ocrTask =
-        OcrTask.builder().taskId(taskId).userId(userId).accountId(accountId).build();
+    OcrTask ocrTask = OcrTask.builder().taskId(taskId).userId(userId).accountId(accountId).build();
     ocrTaskRepository.save(ocrTask);
 
     List<String> categories =

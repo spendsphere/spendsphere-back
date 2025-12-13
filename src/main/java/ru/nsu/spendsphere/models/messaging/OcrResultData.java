@@ -8,4 +8,3 @@ import java.util.List;
  * @param items список распознанных элементов транзакций
  */
 public record OcrResultData(List<OcrResultItem> items) {}
-

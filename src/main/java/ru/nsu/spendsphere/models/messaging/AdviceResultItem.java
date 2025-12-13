@@ -9,4 +9,3 @@ package ru.nsu.spendsphere.models.messaging;
  * @param description описание
  */
 public record AdviceResultItem(Integer id, String title, String priority, String description) {}
-

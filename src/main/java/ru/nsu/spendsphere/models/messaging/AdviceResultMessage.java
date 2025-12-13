@@ -16,4 +16,3 @@ public record AdviceResultMessage(
     String status,
     String goal,
     List<AdviceResultItem> advice) {}
-

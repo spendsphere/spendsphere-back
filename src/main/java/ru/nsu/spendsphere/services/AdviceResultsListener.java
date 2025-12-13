@@ -18,9 +18,7 @@ import ru.nsu.spendsphere.models.messaging.AdviceResultMessage;
 import ru.nsu.spendsphere.repositories.AdviceRepository;
 import ru.nsu.spendsphere.repositories.UserRepository;
 
-/**
- * Listener для обработки результатов генерации финансовых советов.
- */
+/** Listener для обработки результатов генерации финансовых советов. */
 @Service
 @ConditionalOnProperty(value = "app.rabbit.enabled", havingValue = "true")
 @RequiredArgsConstructor
@@ -103,4 +101,3 @@ public class AdviceResultsListener {
         items.size());
   }
 }
-

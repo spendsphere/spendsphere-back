@@ -16,9 +16,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-/**
- * Сущность для хранения отдельного совета.
- */
+/** Сущность для хранения отдельного совета. */
 @Entity
 @Table(name = "advice_items")
 @Getter
@@ -50,4 +48,3 @@ public class AdviceItem {
   @Column(name = "description", nullable = false, length = 2000)
   private String description;
 }
-

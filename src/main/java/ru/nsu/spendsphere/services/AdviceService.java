@@ -31,9 +31,7 @@ import ru.nsu.spendsphere.repositories.AdviceRepository;
 import ru.nsu.spendsphere.repositories.TransactionRepository;
 import ru.nsu.spendsphere.repositories.UserRepository;
 
-/**
- * Сервис для работы с финансовыми советами.
- */
+/** Сервис для работы с финансовыми советами. */
 @Service
 @RequiredArgsConstructor
 public class AdviceService {
@@ -123,7 +121,9 @@ public class AdviceService {
 
   private String generateTaskId(Long userId) {
     String userIdStr = "user_" + userId + "_" + System.currentTimeMillis();
-    return Base64.getUrlEncoder().withoutPadding().encodeToString(userIdStr.getBytes(StandardCharsets.UTF_8));
+    return Base64.getUrlEncoder()
+        .withoutPadding()
+        .encodeToString(userIdStr.getBytes(StandardCharsets.UTF_8));
   }
 
   /**
@@ -164,10 +164,7 @@ public class AdviceService {
 
       List<Transaction> monthTransactions =
           transactions.stream()
-              .filter(
-                  t ->
-                      !t.getDate().isBefore(monthStart)
-                          && !t.getDate().isAfter(monthEnd))
+              .filter(t -> !t.getDate().isBefore(monthStart) && !t.getDate().isAfter(monthEnd))
               .collect(Collectors.toList());
 
       MonthlyStats stats = buildMonthlyStats(monthTransactions);
@@ -209,12 +206,9 @@ public class AdviceService {
                                   .map(Transaction::getAmount)
                                   .reduce(BigDecimal.ZERO, BigDecimal::add);
                           return sum.divide(
-                              BigDecimal.valueOf(list.size()),
-                              2,
-                              java.math.RoundingMode.HALF_UP);
+                              BigDecimal.valueOf(list.size()), 2, java.math.RoundingMode.HALF_UP);
                         })));
 
     return new MonthlyStats(expensesByCategory, incomeBySource, averageByCategory);
   }
 }
-

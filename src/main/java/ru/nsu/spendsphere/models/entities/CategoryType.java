@@ -5,6 +5,3 @@ public enum CategoryType {
   EXPENSE,
   BOTH
 }
-
-
-

@@ -10,4 +10,3 @@ import java.util.List;
  * @param categories список доступных категорий
  */
 public record OcrTaskMessage(String taskId, String imageB64, List<String> categories) {}
-

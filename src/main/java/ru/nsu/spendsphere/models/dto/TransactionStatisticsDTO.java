@@ -32,13 +32,13 @@ public record TransactionStatisticsDTO(
         Map<String, BigDecimal> monthlyExpenses,
     @Schema(description = "Суммы доходов по месяцам (год-месяц -> сумма)")
         Map<String, BigDecimal> monthlyIncome,
-    @Schema(description = "Средние расходы по категориям во времени") List<CategoryTimeSeriesDTO>
-        avgExpensesByCategory,
-    @Schema(description = "Средние доходы по категориям во времени") List<CategoryTimeSeriesDTO>
-        avgIncomeByCategory,
+    @Schema(description = "Средние расходы по категориям во времени")
+        List<CategoryTimeSeriesDTO> avgExpensesByCategory,
+    @Schema(description = "Средние доходы по категориям во времени")
+        List<CategoryTimeSeriesDTO> avgIncomeByCategory,
     @Schema(description = "Максимальный расход за день") MaxExpensePerDayDTO maxExpensePerDay,
-    @Schema(description = "Максимальный расход по категории") MaxExpensePerCategoryDTO
-        maxExpensePerCategory,
+    @Schema(description = "Максимальный расход по категории")
+        MaxExpensePerCategoryDTO maxExpensePerCategory,
     @Schema(description = "Среднее значение расхода за период") BigDecimal averageExpense,
     @Schema(description = "Среднее значение дохода за период") BigDecimal averageIncome,
     @Schema(description = "Дата начала периода") LocalDate startDate,
@@ -53,8 +53,8 @@ public record TransactionStatisticsDTO(
   @Schema(description = "Временной ряд средних значений по категории")
   public record CategoryTimeSeriesDTO(
       @Schema(description = "Название категории") String categoryName,
-      @Schema(description = "Временной ряд (год-месяц -> среднее значение)") Map<String, BigDecimal>
-          timeSeries) {}
+      @Schema(description = "Временной ряд (год-месяц -> среднее значение)")
+          Map<String, BigDecimal> timeSeries) {}
 
   /**
    * DTO для максимального расхода за день.
@@ -78,4 +78,3 @@ public record TransactionStatisticsDTO(
       @Schema(description = "Название категории") String categoryName,
       @Schema(description = "Сумма максимального расхода") BigDecimal amount) {}
 }
-

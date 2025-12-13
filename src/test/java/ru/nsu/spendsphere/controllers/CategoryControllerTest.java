@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.nsu.spendsphere.exceptions.ResourceNotFoundException;
 import ru.nsu.spendsphere.models.dto.CategoryDTO;
 import ru.nsu.spendsphere.models.dto.CategoryInputDTO;
+import ru.nsu.spendsphere.models.entities.CategoryType;
 import ru.nsu.spendsphere.services.CategoryService;
 
 /** Юнит-тесты для {@link CategoryController}. */
@@ -48,9 +49,9 @@ class CategoryControllerTest {
     Long userId = 1L;
     List<CategoryDTO> categories =
         Arrays.asList(
-            new CategoryDTO(1L, "Food", "food-icon.png", true),
-            new CategoryDTO(2L, "Transport", "transport-icon.png", true),
-            new CategoryDTO(3L, "Custom Category", "custom-icon.png", false));
+            new CategoryDTO(1L, "Food", "🍔", "#10b981", true, CategoryType.BOTH),
+            new CategoryDTO(2L, "Transport", "🚗", "#10b981", true, CategoryType.BOTH),
+            new CategoryDTO(3L, "Custom Category", "💼", "#10b981", false, CategoryType.BOTH));
 
     when(categoryService.getAllByUserIdOrDefault(userId)).thenReturn(categories);
 
@@ -91,8 +92,8 @@ class CategoryControllerTest {
     Long userId = 1L;
     List<CategoryDTO> customCategories =
         Arrays.asList(
-            new CategoryDTO(10L, "My Category 1", "icon1.png", false),
-            new CategoryDTO(11L, "My Category 2", "icon2.png", false));
+            new CategoryDTO(10L, "My Category 1", "💼", "#8b5cf6", false, CategoryType.BOTH),
+            new CategoryDTO(11L, "My Category 2", "🎨", "#ec4899", false, CategoryType.BOTH));
 
     when(categoryService.getCustomByUserId(userId)).thenReturn(customCategories);
 
@@ -131,9 +132,9 @@ class CategoryControllerTest {
   void getAllDefaultCategoriesSuccess() throws Exception {
     List<CategoryDTO> defaultCategories =
         Arrays.asList(
-            new CategoryDTO(1L, "Food", "food-icon.png", true),
-            new CategoryDTO(2L, "Transport", "transport-icon.png", true),
-            new CategoryDTO(3L, "Entertainment", "entertainment-icon.png", true));
+            new CategoryDTO(1L, "Food", "🍔", "#10b981", true, CategoryType.BOTH),
+            new CategoryDTO(2L, "Transport", "🚗", "#3b82f6", true, CategoryType.BOTH),
+            new CategoryDTO(3L, "Entertainment", "🎮", "#f59e0b", true, CategoryType.BOTH));
 
     when(categoryService.getAllDefault()).thenReturn(defaultCategories);
 
@@ -155,8 +156,10 @@ class CategoryControllerTest {
   @Test
   void createCustomCategorySuccess() throws Exception {
     Long userId = 1L;
-    CategoryInputDTO inputDto = new CategoryInputDTO("New Category", "new-icon.png");
-    CategoryDTO expectedDto = new CategoryDTO(100L, "New Category", "new-icon.png", false);
+    CategoryInputDTO inputDto =
+        new CategoryInputDTO("New Category", "📁", "#8b5cf6", CategoryType.BOTH);
+    CategoryDTO expectedDto =
+        new CategoryDTO(100L, "New Category", "📁", "#8b5cf6", false, CategoryType.BOTH);
 
     when(categoryService.createCustomCategory(eq(userId), any(CategoryInputDTO.class)))
         .thenReturn(expectedDto);
@@ -181,7 +184,8 @@ class CategoryControllerTest {
   @Test
   void createCustomCategoryUserNotFound() throws Exception {
     Long userId = 999L;
-    CategoryInputDTO inputDto = new CategoryInputDTO("New Category", "new-icon.png");
+    CategoryInputDTO inputDto =
+        new CategoryInputDTO("New Category", "📁", "#8b5cf6", CategoryType.BOTH);
 
     when(categoryService.createCustomCategory(eq(userId), any(CategoryInputDTO.class)))
         .thenThrow(new ResourceNotFoundException("User with id " + userId + " not found"));
@@ -203,9 +207,11 @@ class CategoryControllerTest {
   void updateCustomCategorySuccess() throws Exception {
     Long userId = 1L;
     Long categoryId = 10L;
-    CategoryInputDTO inputDto = new CategoryInputDTO("Updated Category", "updated-icon.png");
+    CategoryInputDTO inputDto =
+        new CategoryInputDTO("Updated Category", "✏️", "#f59e0b", CategoryType.EXPENSE);
     CategoryDTO expectedDto =
-        new CategoryDTO(categoryId, "Updated Category", "updated-icon.png", false);
+        new CategoryDTO(
+            categoryId, "Updated Category", "✏️", "#f59e0b", false, CategoryType.EXPENSE);
 
     when(categoryService.updateCustomCategory(
             eq(userId), eq(categoryId), any(CategoryInputDTO.class)))
@@ -232,7 +238,8 @@ class CategoryControllerTest {
   void updateCustomCategoryUserNotFound() throws Exception {
     Long userId = 999L;
     Long categoryId = 10L;
-    CategoryInputDTO inputDto = new CategoryInputDTO("Updated Category", "updated-icon.png");
+    CategoryInputDTO inputDto =
+        new CategoryInputDTO("Updated Category", "✏️", "#f59e0b", CategoryType.EXPENSE);
 
     when(categoryService.updateCustomCategory(
             eq(userId), eq(categoryId), any(CategoryInputDTO.class)))
@@ -255,7 +262,8 @@ class CategoryControllerTest {
   void updateCustomCategoryCategoryNotFound() throws Exception {
     Long userId = 1L;
     Long categoryId = 999L;
-    CategoryInputDTO inputDto = new CategoryInputDTO("Updated Category", "updated-icon.png");
+    CategoryInputDTO inputDto =
+        new CategoryInputDTO("Updated Category", "✏️", "#f59e0b", CategoryType.EXPENSE);
 
     when(categoryService.updateCustomCategory(
             eq(userId), eq(categoryId), any(CategoryInputDTO.class)))

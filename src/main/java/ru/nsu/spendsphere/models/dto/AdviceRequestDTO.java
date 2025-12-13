@@ -11,4 +11,3 @@ import java.time.LocalDate;
  */
 public record AdviceRequestDTO(
     @NotBlank(message = "Goal is required") String goal, LocalDate targetDate) {}
-

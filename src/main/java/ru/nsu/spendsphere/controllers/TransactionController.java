@@ -166,7 +166,10 @@ public class TransactionController {
   public TransactionStatisticsDTO getStatistics(
       @Parameter(description = "Идентификатор пользователя", required = true) @PathVariable
           Long userId,
-      @Parameter(description = "Количество месяцев (1, 3, 6 или 12)", required = true, example = "3")
+      @Parameter(
+              description = "Количество месяцев (1, 3, 6 или 12)",
+              required = true,
+              example = "3")
           @RequestParam
           Integer months) {
     return transactionService.getTransactionStatistics(userId, months);

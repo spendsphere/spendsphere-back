@@ -125,15 +125,12 @@ public class ParsedTransactionsListener {
         .collect(
             java.util.stream.Collectors.toMap(
                 c -> c.getName().toLowerCase(),
-                    Category::getId,
+                Category::getId,
                 (existing, replacement) -> existing));
   }
 
   private boolean createTransactionFromItem(
-      OcrResultItem item,
-      Long userId,
-      Long accountId,
-      java.util.Map<String, Long> userCategories) {
+      OcrResultItem item, Long userId, Long accountId, java.util.Map<String, Long> userCategories) {
     Long categoryId = null;
     if (item.category() != null && !item.category().isEmpty()) {
       categoryId = userCategories.get(item.category().toLowerCase());

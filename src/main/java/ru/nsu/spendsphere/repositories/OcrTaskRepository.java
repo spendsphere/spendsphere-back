@@ -6,9 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import ru.nsu.spendsphere.models.entities.OcrTask;
 
-/**
- * Репозиторий для работы с OCR-задачами.
- */
+/** Репозиторий для работы с OCR-задачами. */
 @Repository
 public interface OcrTaskRepository extends JpaRepository<OcrTask, UUID> {
 
@@ -20,4 +18,3 @@ public interface OcrTaskRepository extends JpaRepository<OcrTask, UUID> {
    */
   Optional<OcrTask> findByTaskId(UUID taskId);
 }
-

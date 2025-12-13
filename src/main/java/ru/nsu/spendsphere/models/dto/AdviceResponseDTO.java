@@ -21,4 +21,3 @@ public record AdviceResponseDTO(
     LocalDate targetDate,
     List<AdviceItemDTO> items,
     LocalDateTime createdAt) {}
-

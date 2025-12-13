@@ -23,9 +23,7 @@ import ru.nsu.spendsphere.models.dto.AdviceRequestDTO;
 import ru.nsu.spendsphere.models.dto.AdviceResponseDTO;
 import ru.nsu.spendsphere.services.AdviceService;
 
-/**
- * Контроллер для работы с финансовыми советами.
- */
+/** Контроллер для работы с финансовыми советами. */
 @Tag(name = "Финансовые советы", description = "API для получения персональных финансовых советов")
 @RestController
 @RequestMapping("/api/v1/users/{userId}/advices")
@@ -58,8 +56,7 @@ public class AdviceController {
   public void requestAdvice(
       @Parameter(description = "Идентификатор пользователя", required = true) @PathVariable
           Long userId,
-      @Parameter(description = "Данные для генерации советов", required = true) @RequestBody
-          @Valid
+      @Parameter(description = "Данные для генерации советов", required = true) @RequestBody @Valid
           AdviceRequestDTO requestDTO) {
     adviceService.requestAdvice(userId, requestDTO);
   }
@@ -90,4 +87,3 @@ public class AdviceController {
     return adviceService.getRecentAdvices(userId);
   }
 }
-

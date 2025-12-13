@@ -440,8 +440,7 @@ public class TransactionService {
     LocalDate startDate = endDate.minusMonths(months);
 
     List<Transaction> transactions =
-        transactionRepository.findByUserIdWithFilters(
-            userId, null, null, null, startDate, endDate);
+        transactionRepository.findByUserIdWithFilters(userId, null, null, null, startDate, endDate);
 
     return buildStatistics(transactions, startDate, endDate);
   }
@@ -509,8 +508,7 @@ public class TransactionService {
         .collect(
             Collectors.groupingBy(
                 t -> t.getCategory().getName(),
-                Collectors.reducing(
-                    BigDecimal.ZERO, Transaction::getAmount, BigDecimal::add)));
+                Collectors.reducing(BigDecimal.ZERO, Transaction::getAmount, BigDecimal::add)));
   }
 
   /**
@@ -525,8 +523,7 @@ public class TransactionService {
         .collect(
             Collectors.groupingBy(
                 t -> t.getCategory().getName(),
-                Collectors.reducing(
-                    BigDecimal.ZERO, Transaction::getAmount, BigDecimal::add)));
+                Collectors.reducing(BigDecimal.ZERO, Transaction::getAmount, BigDecimal::add)));
   }
 
   /**
@@ -541,8 +538,7 @@ public class TransactionService {
             .collect(
                 Collectors.groupingBy(
                     t -> YearMonth.from(t.getDate()).format(DateTimeFormatter.ofPattern("yyyy-MM")),
-                    Collectors.reducing(
-                        BigDecimal.ZERO, Transaction::getAmount, BigDecimal::add)));
+                    Collectors.reducing(BigDecimal.ZERO, Transaction::getAmount, BigDecimal::add)));
 
     return result.entrySet().stream()
         .sorted(Map.Entry.comparingByKey())
@@ -563,8 +559,7 @@ public class TransactionService {
             .collect(
                 Collectors.groupingBy(
                     t -> YearMonth.from(t.getDate()).format(DateTimeFormatter.ofPattern("yyyy-MM")),
-                    Collectors.reducing(
-                        BigDecimal.ZERO, Transaction::getAmount, BigDecimal::add)));
+                    Collectors.reducing(BigDecimal.ZERO, Transaction::getAmount, BigDecimal::add)));
 
     return result.entrySet().stream()
         .sorted(Map.Entry.comparingByKey())
@@ -594,8 +589,7 @@ public class TransactionService {
                         Collectors.mapping(Transaction::getAmount, Collectors.toList()))));
 
     List<CategoryTimeSeriesDTO> result = new ArrayList<>();
-    for (Map.Entry<String, Map<String, List<BigDecimal>>> entry :
-        categoryMonthlyData.entrySet()) {
+    for (Map.Entry<String, Map<String, List<BigDecimal>>> entry : categoryMonthlyData.entrySet()) {
       String categoryName = entry.getKey();
       Map<String, BigDecimal> timeSeries = new LinkedHashMap<>();
 
@@ -638,13 +632,10 @@ public class TransactionService {
             .collect(
                 Collectors.groupingBy(
                     Transaction::getDate,
-                    Collectors.reducing(
-                        BigDecimal.ZERO, Transaction::getAmount, BigDecimal::add)));
+                    Collectors.reducing(BigDecimal.ZERO, Transaction::getAmount, BigDecimal::add)));
 
     Map.Entry<LocalDate, BigDecimal> maxEntry =
-        dailyExpenses.entrySet().stream()
-            .max(Map.Entry.comparingByValue())
-            .orElse(null);
+        dailyExpenses.entrySet().stream().max(Map.Entry.comparingByValue()).orElse(null);
 
     if (maxEntry == null) {
       return null;
@@ -670,13 +661,10 @@ public class TransactionService {
             .collect(
                 Collectors.groupingBy(
                     t -> t.getCategory().getName(),
-                    Collectors.reducing(
-                        BigDecimal.ZERO, Transaction::getAmount, BigDecimal::add)));
+                    Collectors.reducing(BigDecimal.ZERO, Transaction::getAmount, BigDecimal::add)));
 
     Map.Entry<String, BigDecimal> maxEntry =
-        categoryExpenses.entrySet().stream()
-            .max(Map.Entry.comparingByValue())
-            .orElse(null);
+        categoryExpenses.entrySet().stream().max(Map.Entry.comparingByValue()).orElse(null);
 
     if (maxEntry == null) {
       return null;
@@ -697,9 +685,7 @@ public class TransactionService {
     }
 
     BigDecimal sum =
-        transactions.stream()
-            .map(Transaction::getAmount)
-            .reduce(BigDecimal.ZERO, BigDecimal::add);
+        transactions.stream().map(Transaction::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
 
     return sum.divide(BigDecimal.valueOf(transactions.size()), 2, RoundingMode.HALF_UP);
   }

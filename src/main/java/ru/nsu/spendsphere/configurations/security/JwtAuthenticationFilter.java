@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,6 +18,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import ru.nsu.spendsphere.models.entities.User;
 import ru.nsu.spendsphere.repositories.UserRepository;
 import ru.nsu.spendsphere.services.JwtTokenProvider;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -40,19 +40,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   }
 
   @Override
-  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-          throws ServletException, IOException {
+  protected void doFilterInternal(
+      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+      throws ServletException, IOException {
 
-    log.info("=== PROCESSING REQUEST: {} {} ===",
-            request.getMethod(), request.getRequestURI());
+    log.info("=== PROCESSING REQUEST: {} {} ===", request.getMethod(), request.getRequestURI());
 
     String header = request.getHeader("Authorization");
     log.info("Authorization header: {}", header);
 
     if (header != null && header.startsWith("Bearer ")) {
       String token = header.substring(7);
-      log.info("JWT Token extracted (first 50 chars): {}...",
-              token.length() > 50 ? token.substring(0, 50) : token);
+      log.info(
+          "JWT Token extracted (first 50 chars): {}...",
+          token.length() > 50 ? token.substring(0, 50) : token);
 
       log.info("Token length: {} characters", token.length());
 
@@ -70,12 +71,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
           if (userOpt.isPresent()) {
             User user = userOpt.get();
-            log.info("User details - ID: {}, Email: {}, Name: {}",
-                    user.getId(), user.getEmail(), user.getName());
+            log.info(
+                "User details - ID: {}, Email: {}, Name: {}",
+                user.getId(),
+                user.getEmail(),
+                user.getName());
 
             UsernamePasswordAuthenticationToken auth =
-                    new UsernamePasswordAuthenticationToken(
-                            user, null, List.of(new SimpleGrantedAuthority("ROLE_USER")));
+                new UsernamePasswordAuthenticationToken(
+                    user, null, List.of(new SimpleGrantedAuthority("ROLE_USER")));
             SecurityContextHolder.getContext().setAuthentication(auth);
             log.info("Authentication set in SecurityContext");
           } else {
@@ -91,8 +95,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       log.warn("No Bearer token found in request");
       log.warn("Full headers:");
       Collections.list(request.getHeaderNames())
-              .forEach(headerName ->
-                      log.warn("  {}: {}", headerName, request.getHeader(headerName)));
+          .forEach(headerName -> log.warn("  {}: {}", headerName, request.getHeader(headerName)));
     }
 
     log.info("=== CONTINUING FILTER CHAIN ===");

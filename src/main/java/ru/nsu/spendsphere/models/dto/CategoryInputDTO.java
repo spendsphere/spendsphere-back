@@ -11,5 +11,4 @@ public record CategoryInputDTO(
         String name,
     @Schema(description = "Иконка категории (эмодзи)", example = "🚗") String icon,
     @Schema(description = "Цвет категории (hex)", example = "#8b5cf6") String color,
-    @Schema(description = "Тип категории", example = "EXPENSE")
-        CategoryType categoryType) {}
+    @Schema(description = "Тип категории", example = "EXPENSE") CategoryType categoryType) {}

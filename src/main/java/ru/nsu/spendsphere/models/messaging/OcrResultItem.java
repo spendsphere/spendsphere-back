@@ -21,4 +21,3 @@ public record OcrResultItem(
     @JsonProperty("TransactionDate") LocalDate transactionDate,
     @JsonProperty("Category") String category,
     @JsonProperty("TransactionType") String transactionType) {}
-

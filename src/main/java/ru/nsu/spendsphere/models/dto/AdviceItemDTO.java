@@ -9,4 +9,3 @@ package ru.nsu.spendsphere.models.dto;
  * @param description описание
  */
 public record AdviceItemDTO(Integer id, String title, String priority, String description) {}
-

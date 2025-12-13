@@ -2,14 +2,12 @@ package ru.nsu.spendsphere.controllers;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -59,7 +57,7 @@ public class CurrentUserController {
         userId = userOpt.get().getId();
         log.info("Found user ID from email: {}", userId);
       } else {
-          userId = null;
+        userId = null;
       }
     }
     // 3. Проверяем details аутентификации
@@ -70,25 +68,27 @@ public class CurrentUserController {
         userId = ((Number) details.get("localUserId")).longValue();
         log.info("Found user ID from details: {}", userId);
       } else {
-          userId = null;
+        userId = null;
       }
     } else {
-        userId = null;
+      userId = null;
     }
 
-      if (userId == null) {
+    if (userId == null) {
       log.error("Could not extract user ID from authentication");
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     log.info("Looking for user with ID: {}", userId);
     return userRepository
-            .findById(userId)
-            .map(user -> {
+        .findById(userId)
+        .map(
+            user -> {
               log.info("User found: {}", user.getEmail());
               return ResponseEntity.ok(userMapper.toUserProfileDTO(user));
             })
-            .orElseGet(() -> {
+        .orElseGet(
+            () -> {
               log.error("User not found in database with ID: {}", userId);
               return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             });

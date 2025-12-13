@@ -9,4 +9,3 @@ import java.time.LocalDate;
  * @param targetDate желаемая дата достижения
  */
 public record AdviceGoal(String name, LocalDate targetDate) {}
-

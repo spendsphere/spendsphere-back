@@ -23,9 +23,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
-/**
- * Сущность для хранения финансовых советов пользователя.
- */
+/** Сущность для хранения финансовых советов пользователя. */
 @Entity
 @Table(name = "advices")
 @Getter
@@ -63,4 +61,3 @@ public class Advice {
   @Column(name = "created_at", nullable = false, updatable = false)
   private LocalDateTime createdAt;
 }
-
