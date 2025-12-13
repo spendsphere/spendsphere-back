@@ -83,7 +83,8 @@ public class CategoryService {
     Category category =
         Category.builder()
             .name(body.name())
-            .iconUrl(body.iconUrl())
+            .icon(body.icon())
+            .color(body.color())
             .isDefault(false)
             .categoryType(body.categoryType() != null ? body.categoryType() : ru.nsu.spendsphere.models.entities.CategoryType.BOTH)
             .user(user)
@@ -113,8 +114,11 @@ public class CategoryService {
     if (body.name() != null) {
       category.setName(body.name());
     }
-    if (body.iconUrl() != null) {
-      category.setIconUrl(body.iconUrl());
+    if (body.icon() != null) {
+      category.setIcon(body.icon());
+    }
+    if (body.color() != null) {
+      category.setColor(body.color());
     }
     if (body.categoryType() != null) {
       category.setCategoryType(body.categoryType());

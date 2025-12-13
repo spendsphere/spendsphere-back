@@ -9,9 +9,7 @@ public record CategoryInputDTO(
     @NotBlank(message = "Название категории обязательно")
         @Schema(description = "Название категории", example = "Транспорт", required = true)
         String name,
-    @Schema(
-            description = "URL иконки категории",
-            example = "https://example.com/transport-icon.png")
-        String iconUrl,
+    @Schema(description = "Иконка категории (эмодзи)", example = "🚗") String icon,
+    @Schema(description = "Цвет категории (hex)", example = "#8b5cf6") String color,
     @Schema(description = "Тип категории", example = "EXPENSE")
         CategoryType categoryType) {}

@@ -22,6 +22,8 @@ public class TransactionMapper {
         transaction.getType(),
         transaction.getCategory() != null ? transaction.getCategory().getId() : null,
         transaction.getCategory() != null ? transaction.getCategory().getName() : null,
+        transaction.getCategory() != null ? transaction.getCategory().getIcon() : null,
+        transaction.getCategory() != null ? transaction.getCategory().getColor() : null,
         transaction.getAccount().getId(),
         transaction.getAccount().getName(),
         transaction.getTransferAccount() != null ? transaction.getTransferAccount().getId() : null,
