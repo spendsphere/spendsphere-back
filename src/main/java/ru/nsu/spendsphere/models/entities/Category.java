@@ -53,6 +53,7 @@ public class Category {
 
   @Enumerated(EnumType.STRING)
   @Column(name = "category_type")
+  @Builder.Default
   private CategoryType categoryType = CategoryType.BOTH;
 
   @CreationTimestamp
