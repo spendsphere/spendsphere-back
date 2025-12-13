@@ -3,6 +3,8 @@ package ru.nsu.spendsphere.repositories;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.nsu.spendsphere.models.entities.Account;
 
@@ -11,21 +13,23 @@ import ru.nsu.spendsphere.models.entities.Account;
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
   /**
-   * Находит все счета пользователя по его идентификатору.
+   * Находит все счета пользователя по его идентификатору с загрузкой связанных сущностей.
    *
    * @param userId идентификатор пользователя
    * @return список счетов пользователя
    */
-  List<Account> findByUserId(Long userId);
+  @Query("SELECT a FROM Account a JOIN FETCH a.user WHERE a.user.id = :userId")
+  List<Account> findByUserId(@Param("userId") Long userId);
 
   /**
-   * Находит счет по идентификатору и идентификатору пользователя.
+   * Находит счет по идентификатору и идентификатору пользователя с загрузкой связанных сущностей.
    *
    * @param id идентификатор счета
    * @param userId идентификатор пользователя
    * @return Optional с счетом, если найден
    */
-  Optional<Account> findByIdAndUserId(Long id, Long userId);
+  @Query("SELECT a FROM Account a JOIN FETCH a.user WHERE a.id = :id AND a.user.id = :userId")
+  Optional<Account> findByIdAndUserId(@Param("id") Long id, @Param("userId") Long userId);
 
   /**
    * Проверяет существование счета по идентификатору и идентификатору пользователя.

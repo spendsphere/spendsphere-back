@@ -15,24 +15,38 @@ import ru.nsu.spendsphere.models.entities.TransactionType;
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 
   /**
-   * Находит все транзакции пользователя.
+   * Находит все транзакции пользователя с загрузкой связанных сущностей.
    *
    * @param userId идентификатор пользователя
    * @return список транзакций пользователя
    */
-  List<Transaction> findByUserIdOrderByDateDescCreatedAtDesc(Long userId);
+  @Query(
+      "SELECT DISTINCT t FROM Transaction t "
+          + "LEFT JOIN FETCH t.category "
+          + "LEFT JOIN FETCH t.account "
+          + "LEFT JOIN FETCH t.transferAccount "
+          + "WHERE t.user.id = :userId "
+          + "ORDER BY t.date DESC, t.createdAt DESC")
+  List<Transaction> findByUserIdOrderByDateDescCreatedAtDesc(@Param("userId") Long userId);
 
   /**
-   * Находит транзакцию по идентификатору и идентификатору пользователя.
+   * Находит транзакцию по идентификатору и идентификатору пользователя с загрузкой связанных
+   * сущностей.
    *
    * @param id идентификатор транзакции
    * @param userId идентификатор пользователя
    * @return Optional с транзакцией, если найдена
    */
-  Optional<Transaction> findByIdAndUserId(Long id, Long userId);
+  @Query(
+      "SELECT t FROM Transaction t "
+          + "LEFT JOIN FETCH t.category "
+          + "LEFT JOIN FETCH t.account "
+          + "LEFT JOIN FETCH t.transferAccount "
+          + "WHERE t.id = :id AND t.user.id = :userId")
+  Optional<Transaction> findByIdAndUserId(@Param("id") Long id, @Param("userId") Long userId);
 
   /**
-   * Находит транзакции пользователя с фильтрами.
+   * Находит транзакции пользователя с фильтрами и загрузкой связанных сущностей.
    *
    * @param userId идентификатор пользователя
    * @param type тип транзакции (опционально)
@@ -43,7 +57,11 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
    * @return список транзакций
    */
   @Query(
-      "SELECT t FROM Transaction t WHERE t.user.id = :userId "
+      "SELECT DISTINCT t FROM Transaction t "
+          + "LEFT JOIN FETCH t.category "
+          + "LEFT JOIN FETCH t.account "
+          + "LEFT JOIN FETCH t.transferAccount "
+          + "WHERE t.user.id = :userId "
           + "AND (:type IS NULL OR t.type = :type) "
           + "AND (:accountId IS NULL OR t.account.id = :accountId OR t.transferAccount.id ="
           + " :accountId) "

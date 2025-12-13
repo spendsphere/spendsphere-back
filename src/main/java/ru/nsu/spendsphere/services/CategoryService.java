@@ -86,7 +86,10 @@ public class CategoryService {
             .icon(body.icon())
             .color(body.color())
             .isDefault(false)
-            .categoryType(body.categoryType() != null ? body.categoryType() : ru.nsu.spendsphere.models.entities.CategoryType.BOTH)
+            .categoryType(
+                body.categoryType() != null
+                    ? body.categoryType()
+                    : ru.nsu.spendsphere.models.entities.CategoryType.BOTH)
             .user(user)
             .build();
     return CategoryMapper.toDto(categoryRepository.save(category));

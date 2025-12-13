@@ -42,7 +42,7 @@ public class ReminderService {
     ensureUserExists(userId);
     Reminder reminder =
         reminderRepository
-            .findById(reminderId)
+            .findByIdWithRelations(reminderId)
             .filter(r -> r.getUser().getId() == userId)
             .orElseThrow(
                 () ->
@@ -97,7 +97,7 @@ public class ReminderService {
     ensureUserExists(userId);
     Reminder reminder =
         reminderRepository
-            .findById(reminderId)
+            .findByIdWithRelations(reminderId)
             .filter(r -> r.getUser().getId() == userId)
             .orElseThrow(
                 () ->
@@ -139,7 +139,7 @@ public class ReminderService {
     ensureUserExists(userId);
     Reminder reminder =
         reminderRepository
-            .findById(reminderId)
+            .findByIdWithRelations(reminderId)
             .filter(r -> r.getUser().getId() == userId)
             .orElseThrow(
                 () ->
