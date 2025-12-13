@@ -13,6 +13,8 @@ public record TransactionDTO(
     @Schema(description = "Тип транзакции", example = "EXPENSE") TransactionType type,
     @Schema(description = "Идентификатор категории", example = "5") Long categoryId,
     @Schema(description = "Название категории", example = "Продукты") String categoryName,
+    @Schema(description = "Иконка категории (эмодзи)", example = "🍔") String categoryIcon,
+    @Schema(description = "Цвет категории (hex)", example = "#10b981") String categoryColor,
     @Schema(description = "Идентификатор счета", example = "2") Long accountId,
     @Schema(description = "Название счета", example = "Основная карта") String accountName,
     @Schema(description = "Идентификатор счета для перевода (только для TRANSFER)", example = "3")

@@ -7,7 +7,7 @@ import ru.nsu.spendsphere.models.entities.CategoryType;
 public record CategoryDTO(
     @Schema(description = "Идентификатор категории", example = "1") Long id,
     @Schema(description = "Название категории", example = "Продукты") String name,
-    @Schema(description = "URL иконки категории", example = "https://example.com/food-icon.png")
-        String iconUrl,
+    @Schema(description = "Иконка категории (эмодзи)", example = "🍔") String icon,
+    @Schema(description = "Цвет категории (hex)", example = "#10b981") String color,
     @Schema(description = "Флаг дефолтной категории", example = "false") Boolean isDefault,
     @Schema(description = "Тип категории", example = "EXPENSE") CategoryType categoryType) {}
