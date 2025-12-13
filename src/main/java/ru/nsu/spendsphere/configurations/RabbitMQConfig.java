@@ -26,6 +26,12 @@ public class RabbitMQConfig {
   @Value("${app.rabbit.queues.parsed}")
   private String parsedResultsQueueName;
 
+  @Value("${app.rabbit.queues.advice-tasks}")
+  private String adviceTasksQueueName;
+
+  @Value("${app.rabbit.queues.advice-results}")
+  private String adviceResultsQueueName;
+
   @Bean
   public Queue imageUploadQueue() {
     return new Queue(imageUploadQueueName, true);
@@ -34,6 +40,16 @@ public class RabbitMQConfig {
   @Bean
   public Queue parsedResultsQueue() {
     return new Queue(parsedResultsQueueName, true);
+  }
+
+  @Bean
+  public Queue adviceTasksQueue() {
+    return new Queue(adviceTasksQueueName, true);
+  }
+
+  @Bean
+  public Queue adviceResultsQueue() {
+    return new Queue(adviceResultsQueueName, true);
   }
 
   @Bean
