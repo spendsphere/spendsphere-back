@@ -1,11 +1,12 @@
 package ru.nsu.spendsphere.controllers;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -39,12 +40,24 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
     String token = jwtTokenProvider.generateToken(user.getEmail());
 
-    Cookie cookie = new Cookie("accessToken", token);
-    cookie.setPath("/");
-    cookie.setMaxAge(7 * 24 * 60 * 60);
-    cookie.setHttpOnly(false);
-    cookie.setSecure(false);
-    response.addCookie(cookie);
+    // Определяем окружение: production или dev
+    boolean isProduction = frontendUrl.startsWith("https://");
+
+    ResponseCookie.ResponseCookieBuilder cookieBuilder =
+        ResponseCookie.from("accessToken", token)
+            .path("/")
+            .maxAge(7 * 24 * 60 * 60)
+            .httpOnly(false)
+            .sameSite("Lax");
+
+    // Для production добавляем domain и secure
+    if (isProduction) {
+      cookieBuilder.domain("spendsphere.ru").secure(true);
+    }
+    // Для localhost не устанавливаем domain и secure
+
+    ResponseCookie cookie = cookieBuilder.build();
+    response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
     String redirectUrl = frontendUrl + "/oauth2/callback";
     response.sendRedirect(redirectUrl);
