@@ -144,7 +144,7 @@ public class ParsedTransactionsListener {
             categoryId,
             accountId,
             null,
-            item.price(),
+            item.price().abs(),
             item.description() != null ? item.description() : item.name(),
             item.transactionDate() != null ? item.transactionDate() : java.time.LocalDate.now());
 
@@ -153,7 +153,7 @@ public class ParsedTransactionsListener {
       log.debug(
           "Created transaction from OCR: name={}, price={}, category={}, type={}",
           item.name(),
-          item.price(),
+          item.price().abs(),
           item.category(),
           type);
       return true;
