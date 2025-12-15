@@ -31,7 +31,7 @@ import ru.nsu.spendsphere.services.AccountService;
     name = "Управление счетами",
     description = "API для создания, получения, обновления и удаления счетов пользователей")
 @RestController
-@RequestMapping("/api/v1/users/{userId}/accounts")
+@RequestMapping({"/api/v1/users/{userId}/accounts", "/v1/users/{userId}/accounts"})
 @RequiredArgsConstructor
 public class AccountController {
 

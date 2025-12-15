@@ -39,7 +39,7 @@ import ru.nsu.spendsphere.services.TransactionService;
     name = "Управление транзакциями",
     description = "API для создания, получения, обновления и удаления транзакций пользователей")
 @RestController
-@RequestMapping("/api/v1/users/{userId}/transactions")
+@RequestMapping({"/api/v1/users/{userId}/transactions", "/v1/users/{userId}/transactions"})
 @RequiredArgsConstructor
 public class TransactionController {
 

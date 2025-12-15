@@ -1,5 +1,6 @@
 package ru.nsu.spendsphere.configurations.security;
 
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,7 +61,15 @@ public class SecurityConfig {
                     .anyRequest()
                     .authenticated())
 
-        // 5. Настраиваем OAuth2
+        // 5. Для REST-запросов отдаём 401 вместо редиректа на OAuth,
+        // иначе браузер уходит на accounts.google.com и срывает CORS.
+        .exceptionHandling(
+            exceptions ->
+                exceptions.authenticationEntryPoint(
+                    (request, response, authException) ->
+                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED)))
+
+        // 6. Настраиваем OAuth2
         .oauth2Login(
             oauth2 ->
                 oauth2
@@ -68,16 +77,16 @@ public class SecurityConfig {
                     .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
                     .successHandler(successHandler))
 
-        // 6. Отключаем formLogin если не используется
+        // 7. Отключаем formLogin если не используется
         .formLogin(form -> form.disable())
 
-        // 7. Отключаем basic auth если не используется
+        // 8. Отключаем basic auth если не используется
         .httpBasic(basic -> basic.disable())
 
-        // 8. Добавляем JWT фильтр перед стандартными фильтрами аутентификации
+        // 9. Добавляем JWT фильтр перед стандартными фильтрами аутентификации
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 
-        // 9. Настраиваем logout (опционально)
+        // 10. Настраиваем logout (опционально)
         .logout(
             logout ->
                 logout

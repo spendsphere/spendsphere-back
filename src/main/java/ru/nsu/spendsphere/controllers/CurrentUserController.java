@@ -17,7 +17,7 @@ import ru.nsu.spendsphere.models.mappers.UserMapper;
 import ru.nsu.spendsphere.repositories.UserRepository;
 
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping({"/api/v1/users", "/v1/users"})
 @RequiredArgsConstructor
 @Slf4j
 public class CurrentUserController {

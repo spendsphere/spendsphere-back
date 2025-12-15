@@ -2,6 +2,7 @@ package ru.nsu.spendsphere.configurations.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -33,7 +34,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     log.info("=== JWT FILTER START ===");
     log.info("Request path: {}", path);
 
-    boolean shouldNotFilter = !path.startsWith("/api/") || path.startsWith("/api/v1/auth/");
+    // В проде nginx может отдавать бэкенду путь без префикса /api,
+    // поэтому проверяем оба варианта.
+    boolean isAuthPath =
+        path.startsWith("/api/v1/auth/") || path.startsWith("/v1/auth/") || path.equals("/v1/auth");
+    boolean isApiPath = path.startsWith("/api/") || path.startsWith("/v1/");
+
+    boolean shouldNotFilter = !isApiPath || isAuthPath;
     log.info("Should NOT filter this request? {}", shouldNotFilter);
 
     return shouldNotFilter;
@@ -49,8 +56,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     String header = request.getHeader("Authorization");
     log.info("Authorization header: {}", header);
 
+    // Берём токен либо из Authorization, либо из cookie accessToken
+    String token = null;
     if (header != null && header.startsWith("Bearer ")) {
-      String token = header.substring(7);
+      token = header.substring(7);
+      log.info("Token extracted from Authorization header");
+    } else {
+      Cookie[] cookies = request.getCookies();
+      if (cookies != null) {
+        for (Cookie cookie : cookies) {
+          if ("accessToken".equals(cookie.getName())) {
+            token = cookie.getValue();
+            log.info("Token extracted from accessToken cookie");
+            break;
+          }
+        }
+      }
+    }
+
+    if (token != null) {
       log.info(
           "JWT Token extracted (first 50 chars): {}...",
           token.length() > 50 ? token.substring(0, 50) : token);
@@ -92,7 +116,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         log.error("Error during token processing: {}", e.getMessage(), e);
       }
     } else {
-      log.warn("No Bearer token found in request");
+      log.warn("No token found in Authorization header or accessToken cookie");
       log.warn("Full headers:");
       Collections.list(request.getHeaderNames())
           .forEach(headerName -> log.warn("  {}: {}", headerName, request.getHeader(headerName)));
