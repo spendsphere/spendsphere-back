@@ -1,5 +1,6 @@
 package ru.nsu.spendsphere.services;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -131,6 +132,9 @@ public class ParsedTransactionsListener {
 
   private boolean createTransactionFromItem(
       OcrResultItem item, Long userId, Long accountId, java.util.Map<String, Long> userCategories) {
+    if (item.price().equals(BigDecimal.ZERO)) {
+      return false;
+    }
     Long categoryId = null;
     if (item.category() != null && !item.category().isEmpty()) {
       categoryId = userCategories.get(item.category().toLowerCase());
