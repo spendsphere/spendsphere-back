@@ -150,7 +150,7 @@ public class ParsedTransactionsListener {
             null,
             item.price().abs(),
             item.description() != null ? item.description() : item.name(),
-            item.transactionDate() != null ? item.transactionDate() : java.time.LocalDate.now());
+            java.time.LocalDate.now());
 
     try {
       transactionService.createTransaction(userId, dto);
