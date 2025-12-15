@@ -26,7 +26,7 @@ import ru.nsu.spendsphere.services.CategoryService;
     name = "Управление категориями",
     description = "API для работы с дефолтными и пользовательскими категориями расходов и доходов")
 @RestController
-@RequestMapping("/api/v1/categories")
+@RequestMapping({"/api/v1/categories", "/v1/categories"})
 @RequiredArgsConstructor
 public class CategoryController {
   private final CategoryService categoryService;

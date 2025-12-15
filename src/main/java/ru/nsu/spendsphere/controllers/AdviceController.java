@@ -26,7 +26,7 @@ import ru.nsu.spendsphere.services.AdviceService;
 /** Контроллер для работы с финансовыми советами. */
 @Tag(name = "Финансовые советы", description = "API для получения персональных финансовых советов")
 @RestController
-@RequestMapping("/api/v1/users/{userId}/advices")
+@RequestMapping({"/api/v1/users/{userId}/advices", "/v1/users/{userId}/advices"})
 @RequiredArgsConstructor
 public class AdviceController {
 

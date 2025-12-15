@@ -30,7 +30,7 @@ import ru.nsu.spendsphere.services.ReminderService;
     name = "Напоминания",
     description = "API для создания, получения, обновления и удаления напоминаний")
 @RestController
-@RequestMapping("/api/v1/users/{userId}/reminders")
+@RequestMapping({"/api/v1/users/{userId}/reminders", "/v1/users/{userId}/reminders"})
 @RequiredArgsConstructor
 public class ReminderController {
 

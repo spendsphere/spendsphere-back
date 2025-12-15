@@ -24,7 +24,7 @@ import ru.nsu.spendsphere.services.UserService;
     name = "Управление пользователями",
     description = "API для создания, получения и обновления профилей пользователей")
 @RestController
-@RequestMapping("/api/v1/user")
+@RequestMapping({"/api/v1/user", "/v1/user"})
 @RequiredArgsConstructor
 public class UserController {
   private final UserService userService;
