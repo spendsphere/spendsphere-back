@@ -1,8 +1,7 @@
 package ru.nsu.spendsphere.configurations.security;
 
-import java.util.Arrays;
-import java.util.List;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -102,7 +101,7 @@ public class SecurityConfig {
   }
 
   @Bean
-public CorsConfigurationSource corsConfigurationSource() {
+  public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
     configuration.setAllowedOriginPatterns(List.of("*")); // Для разработки
     configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
